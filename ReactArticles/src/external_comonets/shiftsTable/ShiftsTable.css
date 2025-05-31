@@ -1,0 +1,41 @@
+.shifts-table-container {
+  width: 98%;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 8px;
+}
+
+.shifts-table {
+  width: 98%;
+  border-collapse: collapse;
+  font-family: inherit;
+  direction: rtl;
+}
+
+.shifts-table th,
+.shifts-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.shifts-table th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+
+.shifts-table tr:last-child td {
+  border-bottom: none;
+}
+
+.shifts-table td.morning {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.shifts-table td.evening {
+  color: #d2691e;
+  font-weight: bold;
+}

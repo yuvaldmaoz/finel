@@ -1,0 +1,21 @@
+.simple-bar-chart-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 18px 22px 16px 22px;
+  min-width: 150px;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 16px 12px; /* יותר ריווח בין הגרפים */
+  position: relative;
+  width: 50%; /* יתפוס את כל הרוחב של הקונטיינר */
+  height: 300px;
+  /* border: none;  אין גבול */
+}
+.simple-bar-chart-title {
+  text-align: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
