@@ -22,9 +22,9 @@ router.get("/", (req, res) => {
 // This endpoint creates a new order and updates the stock of products
 
 router.post("/", (req, res) => {
-  const { user_id, items } = req.body;
+  const { user_id, items, supplier_id } = req.body;
 
-  if (!user_id || !Array.isArray(items) || items.length === 0) {
+  if (!user_id || !Array.isArray(items) || items.length === 0 || !supplier_id) {
     return res.status(400).json({ error: "Invalid request payload" });
   }
 
@@ -50,8 +50,10 @@ router.post("/", (req, res) => {
     db.beginTransaction((err) => {
       if (err) return res.status(500).json({ error: "Transaction error" });
 
-      const orderQuery = "INSERT INTO orders (user_id) VALUES (?)";
-      db.query(orderQuery, [user_id], (err, result) => {
+      // כאן הוספנו supplier_id בשאילתת ההכנסה להזמנה
+      const orderQuery =
+        "INSERT INTO orders (user_id, supplier_id) VALUES (?, ?)";
+      db.query(orderQuery, [user_id, supplier_id], (err, result) => {
         if (err) {
           db.rollback(() =>
             res.status(500).json({ error: "Order creation failed" })
@@ -79,6 +81,7 @@ router.post("/", (req, res) => {
             return;
           }
 
+          // כאן יש את עדכון המלאי - שים לב שכרגע הוא מוסיף למלאי (יכול להיות שצריך להפחית)
           const stockUpdateValues = items.map((item) => [
             item.product_id,
             item.quantity,
@@ -117,6 +120,7 @@ router.post("/", (req, res) => {
     });
   });
 });
+
 
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;

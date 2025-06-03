@@ -10,6 +10,7 @@ router.get("/", (req, res) => {
   const query = `
     SELECT 
       p.id,
+      s.id AS supplier_id,
       s.name AS Supplier_Name,
       p.Category,
       p.Product_Name,
@@ -28,7 +29,6 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
-
 
 router.post("/", (req, res) => {
   const {
