@@ -28,24 +28,20 @@ export default function Order() {
       return;
     }
 
-    // בניית אובייקט ההזמנה רק עם הכמויות שנבחרו להזמנה
     const orderData = {
       user_id: 1,
       supplier_id: 5,
       items: orderList.map((item) => ({
         product_id: item.id,
-        quantity: item.orderAmount || 1, // שימוש בכמות שהוזמנה בפועל
+        quantity: item.orderQuantity || 1, // שימוש בכמות שהוזמנה
       })),
     };
 
-    console.log("מה נשלח לשרת:", orderData); // לבדיקה
-
-    // Send to server
     axios
-      .post("orders", orderData)
-      .then((res) => {
+      .post("http://localhost:8801/orders", orderData)
+      .then(() => {
         alert("הזמנה בוצעה בהצלחה!");
-        setOrderList([]); // Reset the order list after success
+        setOrderList([]);
       })
       .catch((error) => {
         console.error("שגיאה בשליחת ההזמנה:", error);
@@ -67,7 +63,7 @@ export default function Order() {
       <TableComponent
         data={orderList.map((item) => ({
           ...item,
-          Quantity: item.orderAmount || 1, // הצגת כמות ההזמנה בטבלה
+          Quantity: item.orderQuantity || 1, // הצגת כמות ההזמנה בטבלה
         }))}
       />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
