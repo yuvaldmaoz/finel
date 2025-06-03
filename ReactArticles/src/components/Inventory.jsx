@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TableComponent from "../external_comonets/table/table";
 import Filtering from "../external_comonets/filtering/filtering";
+import ExportReport from "../external_comonets/ExportReport/ExportReport";
 
 function Inventory() {
   const [list, setlist] = useState([]);
@@ -43,6 +44,7 @@ function Inventory() {
       <div className="container">
         <div className="articles-container">
           <Filtering list={buttons} />
+          <ExportReport list={list} />
           <TableComponent data={list} />
         </div>
       </div>
