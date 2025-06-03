@@ -9,15 +9,17 @@ const db = dbSingleton.getConnection();
 router.get("/", (req, res) => {
   const query = `
     SELECT 
-      id,
-      Supplier_Name,
-      Category,
-      Product_Name,
-      Price,
-      Quantity,
-      DATE_FORMAT(Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-    FROM products
+      p.id,
+      s.name AS Supplier_Name,
+      p.Category,
+      p.Product_Name,
+      p.Price,
+      p.Quantity,
+      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    FROM products p
+    JOIN suppliers s ON p.supplier_id = s.id
   `;
+
   db.query(query, (err, results) => {
     if (err) {
       res.status(500).send(err);
@@ -26,6 +28,7 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+
 
 router.post("/", (req, res) => {
   const {

@@ -122,16 +122,17 @@ router.get("/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
     SELECT 
-      products.id,
-      products.Supplier_Name,
-      products.Category,
-      products.Product_Name,
-      products.Price,
-      order_items.quantity AS Quantity,
-      DATE_FORMAT(products.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-    FROM order_items
-    JOIN products ON order_items.product_id = products.id
-    WHERE order_items.order_id = ?;
+      p.id,
+      s.name AS Supplier_Name,
+      p.Category,
+      p.Product_Name,
+      p.Price,
+      p.Quantity,
+      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    FROM products p
+    JOIN suppliers s ON p.supplier_id = s.id
+    JOIN order_items oi ON oi.product_id = p.id
+    WHERE oi.order_id = ?;
   `;
 
   db.query(query, [orderId], (err, results) => {
