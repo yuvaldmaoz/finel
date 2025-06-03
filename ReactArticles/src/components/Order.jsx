@@ -28,26 +28,43 @@ export default function Order() {
       return;
     }
 
-    // Format the order data according to the API requirements
-    const orderData = {
-      user_id: 1, // You may want to get this from your auth system
-      items: orderList.map((item) => ({
+    // קיבוץ המוצרים לפי ספק
+    const ordersBySupplier = {};
+    orderList.forEach((item) => {
+      const supplierName = item.Supplier_Name;
+      if (!ordersBySupplier[supplierName]) {
+        ordersBySupplier[supplierName] = [];
+      }
+      ordersBySupplier[supplierName].push({
         product_id: item.id,
         quantity: item.Quantity,
-      })),
-    };
-
-    // Send to server
-    axios
-      .post("orders", orderData)
-      .then((res) => {
-        alert("הזמנה בוצעה בהצלחה!");
-        setOrderList([]); // Reset the order list after success
-      })
-      .catch((error) => {
-        console.error("שגיאה בשליחת ההזמנה:", error);
-        alert("שגיאה בביצוע ההזמנה");
       });
+    });
+
+    // שליחת הזמנה נפרדת לכל ספק
+    let successCount = 0;
+    const totalOrders = Object.keys(ordersBySupplier).length;
+
+    Object.entries(ordersBySupplier).forEach(([supplierName, items]) => {
+      const orderData = {
+        user_id: 1,
+        items: items,
+      };
+
+      axios
+        .post("orders", orderData)
+        .then(() => {
+          successCount++;
+          if (successCount === totalOrders) {
+            alert("כל ההזמנות נשלחו בהצלחה!");
+            setOrderList([]);
+          }
+        })
+        .catch((error) => {
+          console.error(`שגיאה בשליחת הזמנה לספק ${supplierName}:`, error);
+          alert(`שגיאה בשליחת הזמנה לספק ${supplierName}`);
+        });
+    });
   };
 
   function filterorder() {
