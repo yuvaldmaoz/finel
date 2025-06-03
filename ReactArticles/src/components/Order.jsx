@@ -31,7 +31,7 @@ export default function Order() {
     // Format the order data according to the API requirements
     const orderData = {
       user_id: 1,
-      supplier_id: 5,
+      supplier_id: 5,//לתקן את ה- supplier_id לפי הצורך
       items: orderList.map((item) => ({
         product_id: item.id,
         quantity: item.Quantity,
