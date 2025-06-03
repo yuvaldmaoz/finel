@@ -96,4 +96,30 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+router.get("/search/:name", (req, res) => {
+  const { name } = req.params;
+  const query = `
+    SELECT 
+      p.id,
+      s.id AS supplier_id,
+      s.name AS Supplier_Name,
+      p.Category,
+      p.Product_Name,
+      p.Price,
+      p.Quantity,
+      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    FROM products p
+    JOIN suppliers s ON p.supplier_id = s.id
+    WHERE p.Product_Name = ?
+  `;
+
+  db.query(query, [name], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.json(results);
+  });
+});
+
 module.exports = router;

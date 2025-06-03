@@ -28,15 +28,17 @@ export default function Order() {
       return;
     }
 
-    // Format the order data according to the API requirements
+    // בניית אובייקט ההזמנה רק עם הכמויות שנבחרו להזמנה
     const orderData = {
       user_id: 1,
-      supplier_id: 5,//לתקן את ה- supplier_id לפי הצורך
+      supplier_id: 5,
       items: orderList.map((item) => ({
         product_id: item.id,
-        quantity: item.Quantity,
+        quantity: item.orderAmount || 1, // שימוש בכמות שהוזמנה בפועל
       })),
     };
+
+    console.log("מה נשלח לשרת:", orderData); // לבדיקה
 
     // Send to server
     axios
@@ -62,7 +64,12 @@ export default function Order() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <TableComponent data={orderList} />
+      <TableComponent
+        data={orderList.map((item) => ({
+          ...item,
+          Quantity: item.orderAmount || 1, // הצגת כמות ההזמנה בטבלה
+        }))}
+      />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
           בצע הזמנה
