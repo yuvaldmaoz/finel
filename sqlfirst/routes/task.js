@@ -47,8 +47,8 @@ router.post("/:id", (req, res) => {
 router.post("/", (req, res) => {
   const { title, status, user_id, date } = req.body;
   const query = `
-INSERT INTO task (title, status, user_id )
-VALUES (?, ?, ?);
+INSERT INTO task (title, status, user_id, date)
+VALUES (?, ?, ?, ?);
 `;
   db.query(query, [title, status, user_id, date], (err) => {
     if (err) {

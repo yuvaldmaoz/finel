@@ -6,6 +6,7 @@ export default function AddTaskPopup({ onAdd, onClose, employeeList }) {
     title: "",
     status: "pending",
     user_id: "",
+    date: "",
   });
 
   const handleSubmit = (e) => {
@@ -56,6 +57,18 @@ export default function AddTaskPopup({ onAdd, onClose, employeeList }) {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="date">תאריך</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={taskData.date}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="button-group">
