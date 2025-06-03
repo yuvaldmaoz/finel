@@ -6,8 +6,6 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-
-
 router.get("/", (req, res) => {
   const query =
     "SELECT id, DATE_FORMAT(week_start_date, '%d/%m/%Y') AS week_start_date FROM `shifts_schedule`;";
