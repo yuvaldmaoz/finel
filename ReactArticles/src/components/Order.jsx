@@ -28,20 +28,22 @@ export default function Order() {
       return;
     }
 
+    // Format the order data according to the API requirements
     const orderData = {
       user_id: 1,
       supplier_id: 5,
       items: orderList.map((item) => ({
         product_id: item.id,
-        quantity: item.orderQuantity || 1, // שימוש בכמות שהוזמנה
+        quantity: item.Quantity,
       })),
     };
 
+    // Send to server
     axios
-      .post("http://localhost:8801/orders", orderData)
-      .then(() => {
+      .post("orders", orderData)
+      .then((res) => {
         alert("הזמנה בוצעה בהצלחה!");
-        setOrderList([]);
+        setOrderList([]); // Reset the order list after success
       })
       .catch((error) => {
         console.error("שגיאה בשליחת ההזמנה:", error);
@@ -60,12 +62,7 @@ export default function Order() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <TableComponent
-        data={orderList.map((item) => ({
-          ...item,
-          Quantity: item.orderQuantity || 1, // הצגת כמות ההזמנה בטבלה
-        }))}
-      />
+      <TableComponent data={orderList} />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
           בצע הזמנה

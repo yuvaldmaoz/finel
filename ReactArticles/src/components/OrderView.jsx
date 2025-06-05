@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import TableComponent from "../external_comonets/table/table";
 import ExportReport from "../external_comonets/ExportReport/ExportReport";
+import TableComponent from "../external_comonets/table/table";
 
 function OrderView() {
   const { id } = useParams();
@@ -33,6 +33,7 @@ function OrderView() {
           <p>{totalPrice}מחיר ההזמנה </p>
           <div className="single-post">
             <ExportReport list={orderDetails} />
+
             <TableComponent data={orderDetails} />
           </div>
         </div>

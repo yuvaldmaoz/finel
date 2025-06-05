@@ -13,7 +13,7 @@ export default function Product({ user, setList }) {
     Expiration_Date,
   } = user;
 
-  const [count, setCount] = useState(1); // כמות שהמשתמש רוצה להזמין
+  const [count, setCount] = useState(0); // כמות שהמשתמש רוצה להזמין
 
   function addToList() {
     if (count <= 0 || count > Quantity) return;
@@ -22,29 +22,31 @@ export default function Product({ user, setList }) {
       const exists = prev.some((item) => item.id === id);
       if (exists) {
         return prev.map((item) =>
-          item.id === id
-            ? { ...item, orderQuantity: (item.orderQuantity || 0) + count }
-            : item
+          item.id === id ? { ...item, Quantity: item.Quantity + count } : item
         );
       } else {
         return [
           ...prev,
           {
-            ...user,
-            orderQuantity: count, // שמירת הכמות שהוזמנה בשדה נפרד
-            originalQuantity: Quantity, // שמירת המלאי המקורי
+            id,
+            Supplier_Name,
+            Price,
+            Category,
+            Product_Name,
+            Quantity: count,
+            Expiration_Date,
           },
         ];
       }
     });
 
-    setCount(1); // איפוס שדה הקלט לאחר ההוספה
+    setCount(0); // איפוס שדה הקלט לאחר ההוספה
   }
 
   return (
     <div className={`Product ${Quantity < 5 ? "low-stock" : ""}`}>
       <p className="p_Product">Name: {Product_Name}</p>
-      <p className="p_Product">ID {id}</p>
+      <p className="p_Product">ID: {id}</p>
       <p className="p_Product">Price: {Price * count} ₪</p>
       {/* <p className="p_Product">Supplier: {Supplier_Name}</p>
       <p className="p_Product">Expiration Date: {Expiration_Date}</p> */}
@@ -58,11 +60,9 @@ export default function Product({ user, setList }) {
         value={count}
         onChange={(e) =>
           setCount(
-            Math.max(1, Math.min(Quantity, parseInt(e.target.value) || 1))
+            Math.max(0, Math.min(Quantity, parseInt(e.target.value) || 0))
           )
         }
-        min="1"
-        max={Quantity}
       />
 
       <button className="product-button" onClick={addToList}>
