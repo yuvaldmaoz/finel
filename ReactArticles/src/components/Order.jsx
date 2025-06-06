@@ -28,27 +28,41 @@ export default function Order() {
       return;
     }
 
-    // Format the order data according to the API requirements
-    const orderData = {
-      user_id: 1,
-      supplier_id: 5,
-      items: orderList.map((item) => ({
+    // Group products by supplier
+    const ordersBySupplier = {};
+    orderList.forEach((item) => {
+      const supplierId = item.Supplier_Name;
+      if (!ordersBySupplier[supplierId]) {
+        ordersBySupplier[supplierId] = [];
+      }
+      ordersBySupplier[supplierId].push({
         product_id: item.id,
         quantity: item.Quantity,
-      })),
-    };
-
-    // Send to server
-    axios
-      .post("orders", orderData)
-      .then((res) => {
-        alert("הזמנה בוצעה בהצלחה!");
-        setOrderList([]); // Reset the order list after success
-      })
-      .catch((error) => {
-        console.error("שגיאה בשליחת ההזמנה:", error);
-        alert("שגיאה בביצוע ההזמנה");
       });
+    });
+
+    // Send separate order for each supplier
+    Object.keys(ordersBySupplier).forEach((supplierName) => {
+      const orderData = {
+        user_id: 1,
+        supplier_id: 5, // Currently fixed
+        items: ordersBySupplier[supplierName],
+      };
+
+      axios
+        .post("orders", orderData)
+        .then((res) => {
+          alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
+          if (Object.keys(ordersBySupplier).length === 1) {
+            setOrderList([]);
+            fetchData();
+          }
+        })
+        .catch((error) => {
+          console.error(`שגיאה בשליחת ההזמנה לספק ${supplierName}:`, error);
+          alert(`שגיאה בשליחת ההזמנה לספק ${supplierName}`);
+        });
+    });
   };
 
   function filterorder() {
