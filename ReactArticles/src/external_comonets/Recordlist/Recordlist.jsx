@@ -7,7 +7,12 @@ export default function Recordlist(props) {
   return (
     <div className={classes.recordsContainer}>
       {list.map((item, index) => (
-        <Record key={index} id={item.id} date={item.created_at} />
+        <Record
+          key={index}
+          id={item.id}
+          date={item.created_at}
+          supplier={item.supplier_name}
+        />
       ))}
     </div>
   );

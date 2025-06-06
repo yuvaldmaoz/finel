@@ -7,8 +7,14 @@ const router = express.Router();
 const db = dbSingleton.getConnection();
 
 router.get("/", (req, res) => {
-  const query =
-    "SELECT id, DATE_FORMAT(created_at, '%d/%m/%Y') AS created_at FROM `orders`";
+  const query = `
+    SELECT 
+      o.id,
+      DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
+      s.name AS supplier_name
+    FROM orders o
+    JOIN suppliers s ON o.supplier_id = s.id
+  `;
   db.query(query, (err, results) => {
     if (err) {
       res.status(500).send(err);
@@ -17,6 +23,7 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+
 
 // Create a new order
 // This endpoint creates a new order and updates the stock of products

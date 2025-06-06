@@ -9,12 +9,15 @@ import classes from "./recoed.module.css";
 export default function Record(props) {
   return (
     <div className={classes.container}>
+      <div>
+        <div className={classes.supplier}>{props.supplier}</div>
+        <div className={classes.details}>
+          מספר הזמנה: {props.id} | תאריך: {props.date}
+        </div>
+      </div>
       <Link to={`/order/${props.id}`} className={classes.button}>
         צפייה
       </Link>
-      <span className={classes.addText}>
-        מספר הזמנה: {props.id} תאריך: {props.date}
-      </span>
     </div>
   );
 }
