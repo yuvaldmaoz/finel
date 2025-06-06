@@ -67,15 +67,17 @@ SELECT 'users', COUNT(*) FROM users;
 
 router.get("/critical", (req, res) => {
   const query = `
-SELECT 
-    id,
-    Supplier_Name,
-    Category,
-    Product_Name,
-    Price,
-    Quantity,
-    DATE_FORMAT(Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-FROM products
+    SELECT 
+      p.id,
+      s.id AS supplier_id,
+      s.name AS Supplier_Name,
+      p.Category,
+      p.Product_Name,
+      p.Price,
+      p.Quantity,
+      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    FROM products p
+    JOIN suppliers s ON p.supplier_id = s.id
 WHERE Quantity < 5
    OR DATEDIFF(Expiration_Date, CURDATE()) <= 5
 `;
