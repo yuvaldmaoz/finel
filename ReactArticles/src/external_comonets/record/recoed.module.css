@@ -11,7 +11,8 @@
 
 .supplier {
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1.25rem;
+  margin-bottom: 5px;
 }
 
 .details {
@@ -20,7 +21,7 @@
 }
 
 .button {
-  background-color: #12c930;
+  background-color: #12a366;
   color: white;
   padding: 5px 15px;
   border-radius: 4px;
@@ -28,5 +29,5 @@
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #096b1a;
 }

@@ -29,11 +29,11 @@ const ExportReport = ({ list }) => {
       style={{
         margin: "10px",
         padding: "8px 16px",
-        backgroundColor: "#4CAF50",
+        backgroundColor: "#12a366",
         color: "white",
         border: "none",
         borderRadius: "4px",
-        cursor: "pointer"
+        cursor: "pointer",
       }}
     >
       הפק דוח מלאי
