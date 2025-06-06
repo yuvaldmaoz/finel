@@ -23,7 +23,8 @@
 .button {
   background-color: #12a366;
   color: white;
-  padding: 5px 15px;
+  padding: 7px 15px;
+  font-size: 0.8em;
   border-radius: 4px;
   text-decoration: none;
 }

@@ -46,11 +46,11 @@ export default function Product({ user, setList }) {
   return (
     <div className={`Product ${Quantity < 5 ? "low-stock" : ""}`}>
       <p className="p_Product">Name: {Product_Name}</p>
-      <p className="p_Product">ID: {id}</p>
+      {/* <p className="p_Product">ID: {id}</p> */}
       <p className="p_Product">Price: {Price * count} ₪</p>
-      {/* <p className="p_Product">Supplier: {Supplier_Name}</p>
-      <p className="p_Product">Expiration Date: {Expiration_Date}</p> */}
-      <p className="p_Product">Available Stock: {Quantity - count}</p>
+      <p className="p_Product">Supplier: {Supplier_Name}</p>
+      {/* <p className="p_Product">Expiration Date: {Expiration_Date}</p> */}
+      <p className="p_Product">Available Stock: {Quantity + count}</p>
       <p className="p_Product">+Stock: {count}</p>
 
       <input
