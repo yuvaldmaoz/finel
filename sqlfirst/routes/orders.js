@@ -125,19 +125,20 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
-    SELECT 
-      p.id,
-      s.name AS Supplier_Name,
-      p.Category,
-      p.Product_Name,
-      p.Price,
-      p.Quantity,
-      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-    FROM products p
-    JOIN suppliers s ON p.supplier_id = s.id
-    JOIN order_items oi ON oi.product_id = p.id
-    WHERE oi.order_id = ?;
-  `;
+  SELECT 
+    p.id,
+    s.name AS Supplier_Name,
+    p.Category,
+    p.Product_Name,
+    p.Price,
+    oi.quantity AS Quantity,
+    DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+  FROM products p
+  JOIN suppliers s ON p.supplier_id = s.id
+  JOIN order_items oi ON oi.product_id = p.id
+  WHERE oi.order_id = ?;
+`;
+
 
   db.query(query, [orderId], (err, results) => {
     if (err) {
