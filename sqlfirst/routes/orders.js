@@ -121,7 +121,6 @@ router.post("/", (req, res) => {
   });
 });
 
-
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -139,13 +138,29 @@ router.get("/:id", (req, res) => {
   WHERE oi.order_id = ?;
 `;
 
-
   db.query(query, [orderId], (err, results) => {
     if (err) {
       res.status(500).send(err);
       return;
     }
     res.json(results);
+  });
+});
+
+router.get("/supplier/:name", (req, res) => {
+  const supplierName = req.params.name;
+  const query = "SELECT id FROM `suppliers` WHERE name = ?";
+
+  db.query(query, [supplierName], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (results.length === 0) {
+      res.status(404).json({ error: "Supplier not found" });
+      return;
+    }
+    res.json(results[0]);
   });
 });
 

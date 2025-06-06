@@ -43,14 +43,18 @@ export default function Order() {
 
     // Send separate order for each supplier
     Object.keys(ordersBySupplier).forEach((supplierName) => {
-      const orderData = {
-        user_id: 1,
-        supplier_id: 5, // Currently fixed
-        items: ordersBySupplier[supplierName],
-      };
-
+      // First get the supplier ID
       axios
-        .post("orders", orderData)
+        .get(`orders/supplier/${supplierName}`)
+        .then((supplierRes) => {
+          const orderData = {
+            user_id: 1,
+            supplier_id: supplierRes.data.id,
+            items: ordersBySupplier[supplierName],
+          };
+
+          return axios.post("orders", orderData);
+        })
         .then((res) => {
           alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
           if (Object.keys(ordersBySupplier).length === 1) {
