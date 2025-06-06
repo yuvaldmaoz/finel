@@ -10,7 +10,7 @@ function OrderView() {
 
   useEffect(() => {
     axios
-      .get(`/orders/${id}`)
+      .get(`/orders/details/${id}`)
       .then((res) => {
         setOrderDetails(res.data);
       })

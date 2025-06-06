@@ -24,6 +24,27 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:supplier", (req, res) => {
+  const supplierName = req.params.supplier;
+
+  const query = `
+    SELECT 
+      o.id,
+      DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
+      s.name AS supplier_name
+    FROM orders o
+    JOIN suppliers s ON o.supplier_id = s.id
+    WHERE s.name = ?;
+  `;
+
+  db.query(query, [supplierName], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.json(results);
+  });
+});
 
 // Create a new order
 // This endpoint creates a new order and updates the stock of products
@@ -128,7 +149,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
   SELECT 

@@ -7,6 +7,9 @@ const taskRoutes = require("./routes/task");
 const DashboardRoutes = require("./routes/Dashboard");
 const Dashboard_employeeRoutes = require("./routes/Dashboard_employee");
 const ShiftRoutes = require("./routes/Shift");
+const suppliersRoutes = require("./routes/suppliers");
+
+
 
 const cors = require("cors");
 const port = 8801;
@@ -21,6 +24,7 @@ app.use("/task", taskRoutes);
 app.use("/Dashboard", DashboardRoutes);
 app.use("/Dashboard_employee", Dashboard_employeeRoutes);
 app.use("/Shift", ShiftRoutes);
+app.use("/suppliers", suppliersRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
