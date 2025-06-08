@@ -43,7 +43,7 @@ function Inventory() {
   };
 
   const categories = [
-    { value: "", label: "הצג הכל" },
+    { value: "", label: " בחר קטגוריה" },
     { value: "Dairy", label: "Dairy" },
     { value: "Bakery", label: "Bakery" },
     { value: "Fruits and Vegetables", label: "Fruits and Vegetables" },
