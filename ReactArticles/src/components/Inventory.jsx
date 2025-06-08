@@ -7,14 +7,15 @@ import ExportReport from "../external_comonets/ExportReport/ExportReport";
 function Inventory() {
   const [list, setlist] = useState([]);
   const [originalList, setOriginalList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [searchTerm]);
 
   const fetchData = () => {
     axios
-      .get("products")
+      .get(`products/search?name=${searchTerm}`)
       .then((res) => {
         setlist(res.data);
         setOriginalList(res.data);
@@ -43,6 +44,19 @@ function Inventory() {
     <div className="main">
       <div className="container">
         <div className="articles-container">
+          <input
+            type="text"
+            placeholder="חפש מוצר..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: "8px",
+              margin: "10px 0",
+              width: "200px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
           <Filtering list={buttons} />
           <ExportReport list={list} />
           <TableComponent data={list} />

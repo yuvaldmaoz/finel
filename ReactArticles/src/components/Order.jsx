@@ -6,6 +6,7 @@ import Product from "../external_comonets/product/product";
 export default function Order() {
   const [productList, setProductList] = useState([]); // מוצרים מהשרת
   const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
+  const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
 
   useEffect(() => {
     fetchData();
@@ -13,7 +14,7 @@ export default function Order() {
 
   const fetchData = () => {
     axios
-      .get("products")
+      .get(`products/search?name=${searchTerm}`)
       .then((res) => {
         setProductList(res.data);
       })
@@ -80,6 +81,22 @@ export default function Order() {
 
   return (
     <div style={{ padding: "20px" }}>
+      <input
+        type="text"
+        placeholder="חפש מוצר..."
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          fetchData();
+        }}
+        style={{
+          padding: "8px",
+          margin: "10px 0",
+          width: "200px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+        }}
+      />
       <TableComponent data={orderList} />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
