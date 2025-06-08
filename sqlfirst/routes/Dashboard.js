@@ -62,9 +62,6 @@ SELECT 'users', COUNT(*) FROM users;
   });
 });
 
-
-
-
 router.get("/critical", (req, res) => {
   const query = `
     SELECT 
