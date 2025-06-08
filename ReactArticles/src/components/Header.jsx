@@ -26,7 +26,7 @@ function Header({ userRole, username }) {
                       }
                       end
                     >
-                      🏠 בית
+                      בית 🏠
                     </NavLink>
                   </li>
                   <li>
@@ -36,7 +36,7 @@ function Header({ userRole, username }) {
                         isActive ? classes.menuItemActive : classes.menuItem
                       }
                     >
-                      📦 הזמנות
+                      הזמנות 📦
                     </NavLink>
                   </li>
                   <li>
@@ -46,7 +46,7 @@ function Header({ userRole, username }) {
                         isActive ? classes.menuItemActive : classes.menuItem
                       }
                     >
-                      🗓️ שיבוצים
+                      שיבוצים 🗓️
                     </NavLink>
                   </li>
                 </>
@@ -59,7 +59,7 @@ function Header({ userRole, username }) {
                       isActive ? classes.menuItemActive : classes.menuItem
                     }
                   >
-                    🏠 בית
+                    בית 🏠
                   </NavLink>
                 </li>
               )}
@@ -70,7 +70,7 @@ function Header({ userRole, username }) {
                     isActive ? classes.menuItemActive : classes.menuItem
                   }
                 >
-                  ✅ משימות
+                  משימות ✅
                 </NavLink>
               </li>
               <li>
@@ -80,7 +80,7 @@ function Header({ userRole, username }) {
                     isActive ? classes.menuItemActive : classes.menuItem
                   }
                 >
-                  📦 מלאי
+                  מלאי 📦
                 </NavLink>
               </li>
             </ul>
@@ -88,8 +88,7 @@ function Header({ userRole, username }) {
         </div>
       </div>
       <div className={classes.usernameDisplay}>
-        <div>משתמש: {username}</div>
-        <div>{userRole}</div>
+        משתמש :{userRole}: {username}
       </div>
     </header>
   );
