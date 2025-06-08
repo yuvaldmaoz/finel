@@ -19,21 +19,31 @@ function OrderView() {
       });
   }, [id]);
 
-  const totalPrice = orderDetails.reduce((total, order) => {
-    const price = parseFloat(order.Price);
-    const quantity = parseInt(order.Quantity, 10);
-    return total + price * quantity;
-  }, 0);
+  const totalPrice = orderDetails
+    .reduce((total, order) => {
+      const price = parseFloat(order.Price);
+      const quantity = parseInt(order.Quantity, 10);
+      return total + price * quantity;
+    }, 0)
+    .toFixed(2);
 
   return (
     <div className="main">
       <section className="post">
         <div className="container">
           <h1 className="post-title">הזמנה מספר {id}</h1>
-          <p>{totalPrice}מחיר ההזמנה </p>
           <div className="single-post">
-            <ExportReport list={orderDetails} />
-
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
+              <p style={{ margin: 0 }}>₪{totalPrice} :מחיר ההזמנה</p>
+              <ExportReport list={orderDetails} />
+            </div>
             <TableComponent data={orderDetails} />
           </div>
         </div>
