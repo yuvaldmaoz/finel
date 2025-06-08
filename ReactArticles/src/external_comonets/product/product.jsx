@@ -16,13 +16,15 @@ export default function Product({ user, setList }) {
   const [count, setCount] = useState(0); // כמות שהמשתמש רוצה להזמין
 
   function addToList() {
-    if (count <= 0 || count > Quantity) return;
+    if (count <= 0) return;
 
     setList((prev) => {
-      const exists = prev.some((item) => item.id === id);
-      if (exists) {
+      const existingItem = prev.find((item) => item.id === id);
+      const totalOrdered = existingItem ? existingItem.Quantity + count : count;
+
+      if (existingItem) {
         return prev.map((item) =>
-          item.id === id ? { ...item, Quantity: item.Quantity + count } : item
+          item.id === id ? { ...item, Quantity: totalOrdered } : item
         );
       } else {
         return [
@@ -47,7 +49,7 @@ export default function Product({ user, setList }) {
     <div className={`Product ${Quantity < 5 ? "low-stock" : ""}`}>
       <p className="p_Product">Name: {Product_Name}</p>
       {/* <p className="p_Product">ID: {id}</p> */}
-      <p className="p_Product">Price: {Price * count} ₪</p>
+      <p className="p_Product">Price: {Price * 1} ₪</p>
       <p className="p_Product">Supplier: {Supplier_Name}</p>
       {/* <p className="p_Product">Expiration Date: {Expiration_Date}</p> */}
       <p className="p_Product">Available Stock: {Quantity + count}</p>
@@ -58,11 +60,8 @@ export default function Product({ user, setList }) {
         className="product-input"
         placeholder="הכנס כמות"
         value={count}
-        onChange={(e) =>
-          setCount(
-            Math.max(0, Math.min(Quantity, parseInt(e.target.value) || 0))
-          )
-        }
+        max="100"
+        onChange={(e) => setCount(Math.min(100, parseInt(e.target.value) || 0))}
       />
 
       <button className="product-button" onClick={addToList}>
