@@ -88,7 +88,8 @@ function Header({ userRole, username }) {
         </div>
       </div>
       <div className={classes.usernameDisplay}>
-        משתמש :{userRole}: {username}
+        <div>משתמש: {username}</div>
+        <div>{userRole}</div>
       </div>
     </header>
   );

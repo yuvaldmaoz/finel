@@ -85,16 +85,17 @@ a {
   background-color: white;
   height: 100vh;
   position: fixed;
-  left: 0;
+  right: 0; /* שינוי מ-left ל-right */
   top: 0;
   padding: 2rem;
   overflow-y: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05); /* עדכון הצללה לצד שמאל */
 }
 
 .main-content {
   flex: 1;
-  margin-left: 250px;
+  margin-right: 250px; /* שינוי מ-margin-left ל-margin-right */
+  margin-left: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -337,7 +338,8 @@ footer {
   }
 
   .main-content {
-    margin-left: 200px;
+    margin-right: 200px;
+    margin-left: 0;
     width: calc(100% - 200px);
   }
 }
@@ -349,7 +351,8 @@ footer {
   }
 
   .main-content {
-    margin-left: 180px;
+    margin-right: 180px;
+    margin-left: 0;
     width: calc(100% - 180px);
   }
 }
