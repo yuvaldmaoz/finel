@@ -54,7 +54,15 @@
 }
 
 .usernameDisplay {
-  /* font-size: 1rem; */
+  position: fixed;
+  bottom: 20px;
+  right: 0;
+  width: 250px;
+  padding: 15px;
+  background-color: #f5f7f9;
+  text-align: center;
+  border-top: 1px solid #ddd;
   color: #555;
-  margin-top: 8px;
+  font-size: 14px;
+  z-index: 1000;
 }
