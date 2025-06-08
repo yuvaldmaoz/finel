@@ -5,20 +5,18 @@ import ExportReport from "../external_comonets/ExportReport/ExportReport";
 
 function Inventory() {
   const [list, setlist] = useState([]);
-  const [originalList, setOriginalList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
-    fetchData();
-  }, [searchTerm]);
+    fetchFilteredData();
+  }, [searchTerm, selectedCategory]);
 
-  const fetchData = () => {
+  const fetchFilteredData = () => {
     axios
-      .get(`products/search?name=${searchTerm}`)
+      .get(`products/search?name=${searchTerm}&category=${selectedCategory}`)
       .then((res) => {
         setlist(res.data);
-        setOriginalList(res.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -34,13 +32,7 @@ function Inventory() {
   ];
 
   const handleCategoryChange = (e) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    if (category === "") {
-      setlist(originalList);
-    } else {
-      setlist(originalList.filter((el) => el.Category === category));
-    }
+    setSelectedCategory(e.target.value);
   };
 
   return (

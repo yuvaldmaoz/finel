@@ -8,7 +8,7 @@ const db = dbSingleton.getConnection();
 
 // router.get("/", (req, res) => {
 //   const query = `
-//     SELECT 
+//     SELECT
 //       p.id,
 //       s.id AS supplier_id,
 //       s.name AS Supplier_Name,
@@ -32,7 +32,7 @@ const db = dbSingleton.getConnection();
 
 router.get("/search", (req, res) => {
   const name = req.query.name || "";
-  const searchPattern = `%${name}%`;
+  const category = req.query.category || "";
 
   const query = `
     SELECT 
@@ -46,16 +46,19 @@ router.get("/search", (req, res) => {
       DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
     FROM products p
     JOIN suppliers s ON p.supplier_id = s.id
-    WHERE p.Product_Name LIKE ?
+    WHERE 
+      (p.Product_Name LIKE ? OR ? = '')
+      AND
+      (p.Category = ? OR ? = '')
   `;
 
-  db.query(query, [searchPattern], (err, results) => {
+  const searchTerm = `%${name}%`;
+  db.query(query, [searchTerm, name, category, category], (err, results) => {
     if (err) {
       return res.status(500).send(err);
     }
     res.json(results);
   });
 });
-
 
 module.exports = router;

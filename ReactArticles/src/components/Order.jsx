@@ -7,14 +7,15 @@ export default function Order() {
   const [productList, setProductList] = useState([]); // מוצרים מהשרת
   const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
   const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
+  const [selectedCategory, setSelectedCategory] = useState(""); // קטגוריה מסוננת
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [searchTerm, selectedCategory]);
 
   const fetchData = () => {
     axios
-      .get(`products/search?name=${searchTerm}`)
+      .get(`products/search?name=${searchTerm}&category=${selectedCategory}`)
       .then((res) => {
         setProductList(res.data);
       })
@@ -22,6 +23,14 @@ export default function Order() {
         console.error("Error fetching products:", error);
       });
   };
+
+  const categories = [
+    { value: "", label: "הצג הכל" },
+    { value: "Dairy", label: "Dairy" },
+    { value: "Bakery", label: "Bakery" },
+    { value: "Fruits and Vegetables", label: "Fruits and Vegetables" },
+    { value: "Cleaning", label: "Cleaning" },
+  ];
 
   const submitOrder = () => {
     if (orderList.length === 0) {
@@ -81,22 +90,37 @@ export default function Order() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <input
-        type="text"
-        placeholder="חפש מוצר..."
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          fetchData();
-        }}
-        style={{
-          padding: "8px",
-          margin: "10px 0",
-          width: "200px",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-        }}
-      />
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="חפש מוצר..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            padding: "8px",
+            width: "200px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        />
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            backgroundColor: "white",
+          }}
+        >
+          {categories.map((category) => (
+            <option key={category.value} value={category.value}>
+              {category.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <TableComponent data={orderList} />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
