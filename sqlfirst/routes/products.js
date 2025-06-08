@@ -33,6 +33,7 @@ const db = dbSingleton.getConnection();
 router.get("/search", (req, res) => {
   const name = req.query.name || "";
   const category = req.query.category || "";
+  const supplier = req.query.supplier || "";
 
   const query = `
     SELECT 
@@ -50,15 +51,21 @@ router.get("/search", (req, res) => {
       (p.Product_Name LIKE ? OR ? = '')
       AND
       (p.Category = ? OR ? = '')
+      AND
+      (s.name = ? OR ? = '')
   `;
 
   const searchTerm = `%${name}%`;
-  db.query(query, [searchTerm, name, category, category], (err, results) => {
-    if (err) {
-      return res.status(500).send(err);
+  db.query(
+    query,
+    [searchTerm, name, category, category, supplier, supplier],
+    (err, results) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.json(results);
     }
-    res.json(results);
-  });
+  );
 });
 
 module.exports = router;

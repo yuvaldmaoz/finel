@@ -8,19 +8,38 @@ export default function Order() {
   const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
   const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
   const [selectedCategory, setSelectedCategory] = useState(""); // קטגוריה מסוננת
+  const [suppliers, setSuppliers] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState("");
 
   useEffect(() => {
     fetchData();
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, selectedSupplier]);
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
 
   const fetchData = () => {
     axios
-      .get(`products/search?name=${searchTerm}&category=${selectedCategory}`)
+      .get(
+        `products/search?name=${searchTerm}&category=${selectedCategory}&supplier=${selectedSupplier}`
+      )
       .then((res) => {
         setProductList(res.data);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
+      });
+  };
+
+  const fetchSuppliers = () => {
+    axios
+      .get("suppliers")
+      .then((res) => {
+        setSuppliers(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching suppliers:", error);
       });
   };
 
@@ -116,6 +135,23 @@ export default function Order() {
           {categories.map((category) => (
             <option key={category.value} value={category.value}>
               {category.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={selectedSupplier}
+          onChange={(e) => setSelectedSupplier(e.target.value)}
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            backgroundColor: "white",
+          }}
+        >
+          <option value="">בחר ספק</option>
+          {suppliers.map((supplier) => (
+            <option key={supplier.name} value={supplier.name}>
+              {supplier.name}
             </option>
           ))}
         </select>
