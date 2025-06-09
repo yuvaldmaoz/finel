@@ -63,61 +63,61 @@ export default function Order_client() {
       });
   };
 
-  const submitOrder = () => {
-    if (orderList.length === 0) {
-      alert("לא נוספו מוצרים להזמנה.");
-      return;
-    }
+  // const submitOrder = () => {
+  //   if (orderList.length === 0) {
+  //     alert("לא נוספו מוצרים להזמנה.");
+  //     return;
+  //   }
 
-    // Group products by supplier
-    const ordersBySupplier = {};
-    orderList.forEach((item) => {
-      const supplierId = item.Supplier_Name;
-      if (!ordersBySupplier[supplierId]) {
-        ordersBySupplier[supplierId] = [];
-      }
-      ordersBySupplier[supplierId].push({
-        product_id: item.id,
-        quantity: item.Quantity,
-      });
-    });
+  //   // Group products by supplier
+  //   const ordersBySupplier = {};
+  //   orderList.forEach((item) => {
+  //     const supplierId = item.Supplier_Name;
+  //     if (!ordersBySupplier[supplierId]) {
+  //       ordersBySupplier[supplierId] = [];
+  //     }
+  //     ordersBySupplier[supplierId].push({
+  //       product_id: item.id,
+  //       quantity: item.Quantity,
+  //     });
+  //   });
 
-    // Send separate order for each supplier
-    Object.keys(ordersBySupplier).forEach((supplierName) => {
-      // First get the supplier ID
-      axios
-        .get(`orders/supplier/${supplierName}`)
-        .then((supplierRes) => {
-          const orderData = {
-            user_id: 1,
-            supplier_id: supplierRes.data.id,
-            items: ordersBySupplier[supplierName],
-          };
+  //   // Send separate order for each supplier
+  //   Object.keys(ordersBySupplier).forEach((supplierName) => {
+  //     // First get the supplier ID
+  //     axios
+  //       .get(`orders/supplier/${supplierName}`)
+  //       .then((supplierRes) => {
+  //         const orderData = {
+  //           user_id: 1,
+  //           supplier_id: supplierRes.data.id,
+  //           items: ordersBySupplier[supplierName],
+  //         };
 
-          return axios.post("orders", orderData);
-        })
-        .then((res) => {
-          alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
-          if (Object.keys(ordersBySupplier).length === 1) {
-            setOrderList([]);
-            fetchData();
-          }
-        })
-        .catch((error) => {
-          console.error(`שגיאה בשליחת ההזמנה לספק ${supplierName}:`, error);
-          alert(`שגיאה בשליחת ההזמנה לספק ${supplierName}`);
-        });
-    });
-  };
+  //         return axios.post("orders", orderData);
+  //       })
+  //       .then((res) => {
+  //         alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
+  //         if (Object.keys(ordersBySupplier).length === 1) {
+  //           setOrderList([]);
+  //           fetchData();
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(`שגיאה בשליחת ההזמנה לספק ${supplierName}:`, error);
+  //         alert(`שגיאה בשליחת ההזמנה לספק ${supplierName}`);
+  //       });
+  //   });
+  // };
 
-  function filterorder() {
-    const originalList = [...productList]; // Assuming originalList is the initial productList
-    // Removed unused variable 'text'
-    setProductList(originalList.filter((el) => el.Quantity < 5));
-  }
-  function filterbaek() {
-    fetchData(); // Reset the productList to its original state by fetching data again
-  }
+  // function filterorder() {
+  //   const originalList = [...productList]; // Assuming originalList is the initial productList
+  //   // Removed unused variable 'text'
+  //   setProductList(originalList.filter((el) => el.Quantity < 5));
+  // }
+  // function filterbaek() {
+  //   fetchData(); // Reset the productList to its original state by fetching data again
+  // }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -170,7 +170,7 @@ export default function Order_client() {
       </div>
 
       <TableComponent data={orderList} />
-      <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
+      {/* <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
           בצע הזמנה
         </button>
@@ -180,7 +180,7 @@ export default function Order_client() {
         <button onClick={filterbaek} className="btn">
           הצג הכול
         </button>
-      </div>
+      </div> */}
 
       <div className="products-grid">
         {productList.map((product) => (
