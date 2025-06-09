@@ -16,6 +16,9 @@ import Shifts from "./Shifts"; // הוסף ייבוא
 import AddShift from "./AddShift"; // הוסף ייבוא
 import ShiftsView from "./ShiftsView"; // הוסף ייבוא
 import RegisterPage from "./RegisterPage"; // הוסף ייבוא לקומפוננטת הרשמה (אם קיימת)
+import OrderClient from "./Order_client";
+import OrdersPageClient from "./OrdersPage_client";
+import OrderViewClient from "./OrderView_client";
 
 function MyRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -136,6 +139,36 @@ function MyRoutes() {
             element={
               isAuthenticated && userRole === "admin" ? (
                 <ShiftsView />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/client/order"
+            element={
+              isAuthenticated && userRole === "client" ? (
+                <OrderClient />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/client/orders"
+            element={
+              isAuthenticated && userRole === "client" ? (
+                <OrdersPageClient />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/client/order/:id"
+            element={
+              isAuthenticated && userRole === "client" ? (
+                <OrderViewClient />
               ) : (
                 <Navigate to="/" />
               )

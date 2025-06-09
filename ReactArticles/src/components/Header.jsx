@@ -63,26 +63,54 @@ function Header({ userRole, username }) {
                   </NavLink>
                 </li>
               )}
-              <li>
-                <NavLink
-                  to="/tasks"
-                  className={({ isActive }) =>
-                    isActive ? classes.menuItemActive : classes.menuItem
-                  }
-                >
-                  משימות ✅
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/Inventory"
-                  className={({ isActive }) =>
-                    isActive ? classes.menuItemActive : classes.menuItem
-                  }
-                >
-                  מלאי 📦
-                </NavLink>
-              </li>
+              {userRole === "client" && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/client/order"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      הזמנה חדשה
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/client/orders"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      ההזמנות שלי
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {(userRole === "admin" || userRole === "employe") && (
+                <>
+                  <li>
+                    <NavLink
+                      to="/tasks"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      משימות ✅
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/Inventory"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      מלאי 📦
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </div>
