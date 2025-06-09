@@ -9,6 +9,9 @@ const Dashboard_employeeRoutes = require("./routes/Dashboard_employee");
 const ShiftRoutes = require("./routes/Shift");
 const suppliersRoutes = require("./routes/suppliers");
 const categoriesRoutes = require("./routes/categories");
+const clientRoutes = require("./routes/client");
+
+
 
 
 
@@ -29,6 +32,7 @@ app.use("/Dashboard_employee", Dashboard_employeeRoutes);
 app.use("/Shift", ShiftRoutes);
 app.use("/suppliers", suppliersRoutes);
 app.use("/categories", categoriesRoutes);
+app.use("/client", clientRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
