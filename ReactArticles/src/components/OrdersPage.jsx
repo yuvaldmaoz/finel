@@ -8,11 +8,13 @@ function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("all");
   const [suppliers, setSuppliers] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     fetchOrders();
     fetchSuppliers();
-  }, [selectedSupplier]); // Now watching selectedSupplier
+  }, [selectedSupplier, startDate, endDate]);
 
   const fetchSuppliers = () => {
     axios
@@ -26,8 +28,23 @@ function OrdersPage() {
   };
 
   const fetchOrders = () => {
-    const url =
-      selectedSupplier === "all" ? "/orders" : `/orders/${selectedSupplier}`;
+    let url = "/orders/by-supplier";
+    const params = new URLSearchParams();
+
+    if (selectedSupplier !== "all") {
+      params.append("supplier", selectedSupplier);
+    }
+    if (startDate) {
+      params.append("startDate", startDate);
+    }
+    if (endDate) {
+      params.append("endDate", endDate);
+    }
+
+    const queryString = params.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
 
     axios
       .get(url)
@@ -43,22 +60,37 @@ function OrdersPage() {
     <div className={classes.container}>
       <div className={classes.header}>
         <h1 className={classes.title}>הזמנות</h1>
-        <select
-          value={selectedSupplier}
-          onChange={(e) => setSelectedSupplier(e.target.value)}
-          className={classes.button}
-          style={{ marginLeft: "10px" }}
-        >
-          <option value="all">כל הספקים</option>
-          {suppliers.map((supplier, index) => (
-            <option key={index} value={supplier.name}>
-              {supplier.name}
-            </option>
-          ))}
-        </select>
-        <Link to="/Order" className={classes.button}>
-          + הוסף הזמנה
-        </Link>
+        <div className={classes.filterSection}>
+          <select
+            value={selectedSupplier}
+            onChange={(e) => setSelectedSupplier(e.target.value)}
+            className={classes.filterInput}
+          >
+            <option value="all">כל הספקים</option>
+            {suppliers.map((supplier, index) => (
+              <option key={index} value={supplier.name}>
+                {supplier.name}
+              </option>
+            ))}
+          </select>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className={classes.filterInput}
+            placeholder="תאריך התחלה"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className={classes.filterInput}
+            placeholder="תאריך סיום"
+          />
+          <Link to="/Order" className={classes.button}>
+            + הוסף הזמנה
+          </Link>
+        </div>
       </div>
       <Window record={orders} />
     </div>

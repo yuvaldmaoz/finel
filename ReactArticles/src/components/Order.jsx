@@ -10,7 +10,9 @@ export default function Order() {
   const [selectedCategory, setSelectedCategory] = useState(""); // קטגוריה מסוננת
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("");
-  const [categories, setCategories] = useState([{ value: "", label: "בחר קטגוריה" }]);
+  const [categories, setCategories] = useState([
+    { value: "", label: "בחר קטגוריה" },
+  ]);
 
   useEffect(() => {
     fetchData();
@@ -50,7 +52,10 @@ export default function Order() {
           value: cat.name,
           label: cat.name,
         }));
-        setCategories([{ value: "", label: "בחר קטגוריה" }, ...formattedCategories]);
+        setCategories([
+          { value: "", label: "בחר קטגוריה" },
+          ...formattedCategories,
+        ]);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);

@@ -6,7 +6,32 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-router.get("/", (req, res) => {
+// router.get("/", (req, res) => {
+//   const query = `
+//     SELECT 
+//       o.id,
+//       DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
+//       s.name AS supplier_name
+//     FROM orders o
+//     JOIN suppliers s ON o.supplier_id = s.id
+//   `;
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       res.status(500).send(err);
+//       return;
+//     }
+//     res.json(results);
+//   });
+// });
+
+// Example usage:
+// GET /orders/by-supplier?supplier=tnuva&startDate=2025-06-06&endDate=2025-06-08
+// GET /orders/by-supplier - Returns all orders
+router.get("/by-supplier", (req, res) => {
+  const supplierName = req.query.supplier || "";
+  const startDate = req.query.startDate || "";
+  const endDate = req.query.endDate || "";
+
   const query = `
     SELECT 
       o.id,
@@ -14,36 +39,26 @@ router.get("/", (req, res) => {
       s.name AS supplier_name
     FROM orders o
     JOIN suppliers s ON o.supplier_id = s.id
-  `;
-  db.query(query, (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
-    }
-    res.json(results);
-  });
-});
-
-router.get("/:supplier", (req, res) => {
-  const supplierName = req.params.supplier;
-
-  const query = `
-    SELECT 
-      o.id,
-      DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
-      s.name AS supplier_name
-    FROM orders o
-    JOIN suppliers s ON o.supplier_id = s.id
-    WHERE s.name = ?;
+    WHERE (s.name = ? OR ? = '')
+    AND (
+      CASE 
+        WHEN ? = '' OR ? = '' THEN 1
+        ELSE o.created_at BETWEEN ? AND ?
+      END
+    )
   `;
 
-  db.query(query, [supplierName], (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
+  db.query(
+    query,
+    [supplierName, supplierName, startDate, endDate, startDate, endDate],
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json(results);
     }
-    res.json(results);
-  });
+  );
 });
 
 // Create a new order
@@ -166,7 +181,6 @@ router.get("/details/:id", (req, res) => {
   JOIN order_items oi ON oi.product_id = p.id
   WHERE oi.order_id = ?;
 `;
-
 
   db.query(query, [orderId], (err, results) => {
     if (err) {
