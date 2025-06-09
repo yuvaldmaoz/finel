@@ -9,6 +9,9 @@ function Inventory() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [categories, setCategories] = useState([
+    { value: "", label: "בחר קטגוריה" },
+  ]);
 
   useEffect(() => {
     fetchFilteredData();
@@ -16,6 +19,7 @@ function Inventory() {
 
   useEffect(() => {
     fetchSuppliers();
+    fetchCategories();
   }, []);
 
   const fetchFilteredData = () => {
@@ -42,13 +46,23 @@ function Inventory() {
       });
   };
 
-  const categories = [
-    { value: "", label: " בחר קטגוריה" },
-    { value: "Dairy", label: "Dairy" },
-    { value: "Bakery", label: "Bakery" },
-    { value: "Fruits and Vegetables", label: "Fruits and Vegetables" },
-    { value: "Cleaning", label: "Cleaning" },
-  ];
+  const fetchCategories = () => {
+    axios
+      .get("categories")
+      .then((res) => {
+        const formattedCategories = res.data.map((cat) => ({
+          value: cat.name,
+          label: cat.name,
+        }));
+        setCategories([
+          { value: "", label: "בחר קטגוריה" },
+          ...formattedCategories,
+        ]);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);

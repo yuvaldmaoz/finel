@@ -155,16 +155,18 @@ router.get("/details/:id", (req, res) => {
   SELECT 
     p.id,
     s.name AS Supplier_Name,
-    p.Category,
+    c.name AS Category,
     p.Product_Name,
     p.Price,
     oi.quantity AS Quantity,
     DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
   FROM products p
   JOIN suppliers s ON p.supplier_id = s.id
+  JOIN categories c ON p.category_id = c.id
   JOIN order_items oi ON oi.product_id = p.id
   WHERE oi.order_id = ?;
 `;
+
 
   db.query(query, [orderId], (err, results) => {
     if (err) {

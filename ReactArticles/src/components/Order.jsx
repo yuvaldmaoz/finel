@@ -10,14 +10,13 @@ export default function Order() {
   const [selectedCategory, setSelectedCategory] = useState(""); // קטגוריה מסוננת
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [categories, setCategories] = useState([{ value: "", label: "בחר קטגוריה" }]);
 
   useEffect(() => {
     fetchData();
-  }, [searchTerm, selectedCategory, selectedSupplier]);
-
-  useEffect(() => {
     fetchSuppliers();
-  }, []);
+    fetchCategories();
+  }, [searchTerm, selectedCategory, selectedSupplier]);
 
   const fetchData = () => {
     axios
@@ -43,13 +42,20 @@ export default function Order() {
       });
   };
 
-  const categories = [
-    { value: "", label: "בחר קטגוריה" },
-    { value: "Dairy", label: "Dairy" },
-    { value: "Bakery", label: "Bakery" },
-    { value: "Fruits and Vegetables", label: "Fruits and Vegetables" },
-    { value: "Cleaning", label: "Cleaning" },
-  ];
+  const fetchCategories = () => {
+    axios
+      .get("categories")
+      .then((res) => {
+        const formattedCategories = res.data.map((cat) => ({
+          value: cat.name,
+          label: cat.name,
+        }));
+        setCategories([{ value: "", label: "בחר קטגוריה" }, ...formattedCategories]);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
 
   const submitOrder = () => {
     if (orderList.length === 0) {
