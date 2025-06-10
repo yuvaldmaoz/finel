@@ -117,34 +117,30 @@ router.get("/", (req, res) => {
   });
 });
 
-
-
 // Get all orders for a client
-// router.get("/details/:id", (req, res) => {
-//   const orderId = req.params.id;
-//   const query = `
-//   SELECT 
-//     p.id,
-//     s.name AS Supplier_Name,
-//     c.name AS Category,
-//     p.Product_Name,
-//     p.Price,
-//     oi.quantity AS Quantity,
-//     DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-//   FROM products p
-//   JOIN suppliers s ON p.supplier_id = s.id
-//   JOIN categories c ON p.category_id = c.id
-//   JOIN order_items oi ON oi.product_id = p.id
-//   WHERE oi.order_id = ?;
-// `;
+router.get("/:id", (req, res) => {
+  const orderId = req.params.id;
+  const query = `
+SELECT 
+  p.id,
+  c.name AS Category,
+  p.Product_Name,
+  p.Price,
+  oic.quantity AS Quantity,
+  DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+FROM products p
+JOIN categories c ON p.category_id = c.id
+JOIN order_items_client oic ON oic.product_id = p.id
+WHERE oic.order_id = ?;
+`;
 
-//   db.query(query, [orderId], (err, results) => {
-//     if (err) {
-//       res.status(500).send(err);
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
+  db.query(query, [orderId], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.json(results);
+  });
+});
 
 module.exports = router;
