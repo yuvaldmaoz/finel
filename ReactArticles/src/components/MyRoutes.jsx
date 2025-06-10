@@ -67,7 +67,7 @@ function MyRoutes() {
             path="/Order"
             element={
               isAuthenticated && userRole === "admin" ? (
-                <Order />
+                <Order userRole={userRole} />
               ) : (
                 <Navigate to="/" />
               )
@@ -77,7 +77,7 @@ function MyRoutes() {
             path="/order/:id"
             element={
               isAuthenticated && userRole === "admin" ? (
-                <OrderView />
+                <OrderView userRole={userRole} />
               ) : (
                 <Navigate to="/" />
               )
@@ -87,7 +87,7 @@ function MyRoutes() {
             path="/orders"
             element={
               isAuthenticated && userRole === "admin" ? (
-                <OrdersPage />
+                <OrdersPage userRole={userRole} />
               ) : (
                 <Navigate to="/" />
               )
