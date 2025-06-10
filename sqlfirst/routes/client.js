@@ -91,10 +91,24 @@ router.post("/", (req, res) => {
   });
 });
 
+// Get all orders for a client
 router.get("/", (req, res) => {
-  const query =
-    "SELECT id, DATE_FORMAT(week_start_date, '%d/%m/%Y') AS week_start_date FROM `shifts_schedule`;";
-  db.query(query, (err, results) => {
+  const startDate = req.query.startDate || "";
+  const endDate = req.query.endDate || "";
+
+  const query = `
+    SELECT 
+      id,
+      DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
+      user_id
+    FROM orders_client o
+    WHERE (
+      (? = '' OR ? = '') 
+      OR (o.created_at BETWEEN ? AND ?)
+    )
+  `;
+
+  db.query(query, [startDate, endDate, startDate, endDate], (err, results) => {
     if (err) {
       res.status(500).send(err);
       return;
@@ -102,5 +116,35 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+
+
+
+// Get all orders for a client
+// router.get("/details/:id", (req, res) => {
+//   const orderId = req.params.id;
+//   const query = `
+//   SELECT 
+//     p.id,
+//     s.name AS Supplier_Name,
+//     c.name AS Category,
+//     p.Product_Name,
+//     p.Price,
+//     oi.quantity AS Quantity,
+//     DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+//   FROM products p
+//   JOIN suppliers s ON p.supplier_id = s.id
+//   JOIN categories c ON p.category_id = c.id
+//   JOIN order_items oi ON oi.product_id = p.id
+//   WHERE oi.order_id = ?;
+// `;
+
+//   db.query(query, [orderId], (err, results) => {
+//     if (err) {
+//       res.status(500).send(err);
+//       return;
+//     }
+//     res.json(results);
+//   });
+// });
 
 module.exports = router;
