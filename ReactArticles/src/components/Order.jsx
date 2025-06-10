@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TableComponent from "../external_comonets/table/table";
 import Product from "../external_comonets/product/product";
 
-export default function Order({ userRole }) {
+export default function Order({ userRole, id }) {
   const [productList, setProductList] = useState([]); // מוצרים מהשרת
   const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
   const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
@@ -72,7 +72,7 @@ export default function Order({ userRole }) {
     if (userRole === "client") {
       // לוגיקת הזמנה עבור לקוח
       const orderData = {
-        user_id: 1, // צריך לקבל את ה-ID האמיתי של המשתמש
+        user_id: id, // צריך לקבל את ה-ID האמיתי של המשתמש
         items: orderList.map((item) => ({
           product_id: item.id,
           quantity: item.Quantity,

@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/img/logo.png";
 import classes from "../assets/styles/Header.module.css";
 
-function Header({ userRole, username }) {
+function Header({ userRole, username , id }) {
   return (
     <header className={classes.header}>
       <div className="container">
@@ -97,6 +97,7 @@ function Header({ userRole, username }) {
       </div>
       <div className={classes.usernameDisplay}>
         משתמש :{userRole}: {username}
+        {id && <span> | ID: {id}</span>}
       </div>
     </header>
   );

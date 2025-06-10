@@ -17,7 +17,7 @@ export default function Login({ onLogin }) {
         if (response.data.message === "Login successful") {
           const isAdmin = response.data.role === "admin";
           alert(isAdmin ? "התחברת בהצלחה כמנהל!" : "התחברת בהצלחה כעובד!");
-          onLogin(response.data.role, response.data.name);
+          onLogin(response.data.role, response.data.name, response.data.id);
           navigate("/Home");
         }
       })

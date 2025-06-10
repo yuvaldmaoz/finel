@@ -21,18 +21,22 @@ function MyRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null); // "admin" or "employee"
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState(null); // הוספת state חדש
 
   // דוגמה: קבלת תפקיד מה־login
-  const handleLogin = (role, username) => {
+  const handleLogin = (role, username, id) => {
     setIsAuthenticated(true);
     setUsername(username);
     setUserRole(role); // role יכול להיות "admin" או "employee"
+    setUserId(id);
   };
 
   return (
     <div className="App">
       <div className="sidebar">
-        {isAuthenticated && <Header userRole={userRole} username={username} />}
+        {isAuthenticated && (
+          <Header userRole={userRole} username={username} id={userId} />
+        )}
       </div>
       <div className="main-content">
         <Routes>
@@ -65,7 +69,7 @@ function MyRoutes() {
             element={
               isAuthenticated &&
               (userRole === "admin" || userRole === "client") ? (
-                <Order userRole={userRole} />
+                <Order userRole={userRole} id={userId} />
               ) : (
                 <Navigate to="/" />
               )

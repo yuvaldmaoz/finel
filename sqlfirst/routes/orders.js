@@ -6,23 +6,6 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-// router.get("/", (req, res) => {
-//   const query = `
-//     SELECT
-//       o.id,
-//       DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
-//       s.name AS supplier_name
-//     FROM orders o
-//     JOIN suppliers s ON o.supplier_id = s.id
-//   `;
-//   db.query(query, (err, results) => {
-//     if (err) {
-//       res.status(500).send(err);
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
 
 // Example usage:
 // GET /orders/by-supplier?supplier=tnuva&startDate=2025-06-06&endDate=2025-06-08
@@ -167,95 +150,6 @@ router.post("/", (req, res) => {
 
 
 
-
-
-
-//לקוח 
-// router.post("/", (req, res) => {
-//   const { user_id, items, supplier_id } = req.body;
-
-//   if (!user_id || !Array.isArray(items) || items.length === 0 || !supplier_id) {
-//     return res.status(400).json({ error: "Invalid request payload" });
-//   }
-
-//   db.beginTransaction((err) => {
-//     if (err) return res.status(500).json({ error: "Transaction error" });
-
-//     const orderQuery =
-//       "INSERT INTO orders (user_id, supplier_id) VALUES (?, ?)";
-//     db.query(orderQuery, [user_id, supplier_id], (err, result) => {
-//       if (err) {
-//         db.rollback(() =>
-//           res.status(500).json({ error: "Order creation failed" })
-//         );
-//         return;
-//       }
-
-//       const orderId = result.insertId;
-//       const orderItems = items.map((item) => [
-//         orderId,
-//         item.product_id,
-//         item.quantity,
-//       ]);
-
-//       const itemsQuery = `
-//         INSERT INTO order_items (order_id, product_id, quantity)
-//         VALUES ?
-//       `;
-
-//       db.query(itemsQuery, [orderItems], (err) => {
-//         if (err) {
-//           db.rollback(() =>
-//             res.status(500).json({ error: "Order items creation failed" })
-//           );
-//           return;
-//         }
-
-//         // הורדת מלאי בלבד בלי בדיקות – אתה אחראי לבדוק ב-FE
-//         const stockUpdatePromises = items.map((item) => {
-//           return new Promise((resolve, reject) => {
-//             const updateStockQuery = `
-//               UPDATE products
-//               SET Quantity = Quantity - ?
-//               WHERE id = ?
-//             `;
-//             db.query(
-//               updateStockQuery,
-//               [item.quantity, item.product_id],
-//               (err, result) => {
-//                 if (err) reject(err);
-//                 else resolve();
-//               }
-//             );
-//           });
-//         });
-
-//         Promise.all(stockUpdatePromises)
-//           .then(() => {
-//             db.commit((err) => {
-//               if (err) {
-//                 db.rollback(() =>
-//                   res.status(500).json({ error: "Transaction commit failed" })
-//                 );
-//                 return;
-//               }
-
-//               res.status(201).json({
-//                 message: "Order created and stock updated",
-//                 orderId,
-//               });
-//             });
-//           })
-//           .catch((err) => {
-//             db.rollback(() =>
-//               res.status(500).json({ error: "Stock update failed" })
-//             );
-//           });
-//       });
-//     });
-//   });
-// });
-
 router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -283,21 +177,6 @@ router.get("/details/:id", (req, res) => {
   });
 });
 
-router.get("/supplier/:name", (req, res) => {
-  const supplierName = req.params.name;
-  const query = "SELECT id FROM `suppliers` WHERE name = ?";
 
-  db.query(query, [supplierName], (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
-    }
-    if (results.length === 0) {
-      res.status(404).json({ error: "Supplier not found" });
-      return;
-    }
-    res.json(results[0]);
-  });
-});
 
 module.exports = router;
