@@ -31,16 +31,6 @@ function Header({ userRole, username }) {
                   </li>
                   <li>
                     <NavLink
-                      to="/orders"
-                      className={({ isActive }) =>
-                        isActive ? classes.menuItemActive : classes.menuItem
-                      }
-                    >
-                      הזמנות 📦
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
                       to="/shifts"
                       className={({ isActive }) =>
                         isActive ? classes.menuItemActive : classes.menuItem
@@ -51,42 +41,32 @@ function Header({ userRole, username }) {
                   </li>
                 </>
               )}
-              {userRole === "employe" && (
-                <li>
-                  <NavLink
-                    to="/employee"
-                    className={({ isActive }) =>
-                      isActive ? classes.menuItemActive : classes.menuItem
-                    }
-                  >
-                    בית 🏠
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "client" && (
+
+              {(userRole === "admin" || userRole === "client") && (
                 <>
                   <li>
                     <NavLink
-                      to="/client/order"
+                      to="/orders"
                       className={({ isActive }) =>
                         isActive ? classes.menuItemActive : classes.menuItem
                       }
                     >
-                      הזמנה חדשה
+                      הזמנות 📦
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to="/client/orders"
+                      to="/Order"
                       className={({ isActive }) =>
                         isActive ? classes.menuItemActive : classes.menuItem
                       }
                     >
-                      ההזמנות שלי
+                      הזמנה חדשה ➕
                     </NavLink>
                   </li>
                 </>
               )}
+
               {(userRole === "admin" || userRole === "employe") && (
                 <>
                   <li>
