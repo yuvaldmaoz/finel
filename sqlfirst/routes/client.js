@@ -95,6 +95,8 @@ router.post("/", (req, res) => {
 router.get("/", (req, res) => {
   const startDate = req.query.startDate || "";
   const endDate = req.query.endDate || "";
+  const user_id = req.query.user_id;
+
 
   const query = `
     SELECT 
@@ -102,13 +104,14 @@ router.get("/", (req, res) => {
       DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
       user_id
     FROM orders_client o
-    WHERE (
-      (? = '' OR ? = '') 
-      OR (o.created_at BETWEEN ? AND ?)
-    )
+    WHERE o.user_id = ?
+      AND (
+        (? = '' OR ? = '') 
+        OR (o.created_at BETWEEN ? AND ?)
+      )
   `;
 
-  db.query(query, [startDate, endDate, startDate, endDate], (err, results) => {
+  db.query(query, [user_id, startDate, endDate, startDate, endDate], (err, results) => {
     if (err) {
       res.status(500).send(err);
       return;

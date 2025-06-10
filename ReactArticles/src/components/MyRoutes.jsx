@@ -91,7 +91,7 @@ function MyRoutes() {
             element={
               isAuthenticated &&
               (userRole === "admin" || userRole === "client") ? (
-                <OrdersPage userRole={userRole} />
+                <OrdersPage userRole={userRole} id={userId} />
               ) : (
                 <Navigate to="/" />
               )

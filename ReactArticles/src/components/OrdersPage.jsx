@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import classes from "../external_comonets/window/window.module.css";
 
-function OrdersPage({ userRole }) {
+function OrdersPage({ userRole, id }) {
   const [orders, setOrders] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("all");
   const [suppliers, setSuppliers] = useState([]);
@@ -31,9 +31,10 @@ function OrdersPage({ userRole }) {
 
   const fetchOrders = () => {
     if (userRole === "client") {
-      // לוגיקה עבור הזמנות לקוח
       let url = "/client";
       const params = new URLSearchParams();
+
+      params.append("user_id", id); // הוספת ה-user_id לפרמטרים
 
       if (startDate) {
         params.append("startDate", startDate);
@@ -43,9 +44,7 @@ function OrdersPage({ userRole }) {
       }
 
       const queryString = params.toString();
-      if (queryString) {
-        url += `?${queryString}`;
-      }
+      url += `?${queryString}`;
 
       axios
         .get(url)
