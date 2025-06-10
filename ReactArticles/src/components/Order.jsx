@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import TableComponent from "../external_comonets/table/table";
 import Product from "../external_comonets/product/product";
 
-export default function Order() {
+export default function Order({ userRole }) {
   const [productList, setProductList] = useState([]); // מוצרים מהשרת
   const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
   const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
@@ -68,45 +69,65 @@ export default function Order() {
       return;
     }
 
-    // Group products by supplier
-    const ordersBySupplier = {};
-    orderList.forEach((item) => {
-      const supplierId = item.Supplier_Name;
-      if (!ordersBySupplier[supplierId]) {
-        ordersBySupplier[supplierId] = [];
-      }
-      ordersBySupplier[supplierId].push({
-        product_id: item.id,
-        quantity: item.Quantity,
-      });
-    });
+    if (userRole === "client") {
+      // לוגיקת הזמנה עבור לקוח
+      const orderData = {
+        user_id: 1, // צריך לקבל את ה-ID האמיתי של המשתמש
+        items: orderList.map((item) => ({
+          product_id: item.id,
+          quantity: item.Quantity,
+        })),
+      };
 
-    // Send separate order for each supplier
-    Object.keys(ordersBySupplier).forEach((supplierName) => {
-      // First get the supplier ID
       axios
-        .get(`orders/supplier/${supplierName}`)
-        .then((supplierRes) => {
-          const orderData = {
-            user_id: 1,
-            supplier_id: supplierRes.data.id,
-            items: ordersBySupplier[supplierName],
-          };
-
-          return axios.post("orders", orderData);
-        })
+        .post("client", orderData)
         .then((res) => {
-          alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
-          if (Object.keys(ordersBySupplier).length === 1) {
-            setOrderList([]);
-            fetchData();
-          }
+          alert("ההזמנה בוצעה בהצלחה!");
+          setOrderList([]);
+          fetchData();
         })
         .catch((error) => {
-          console.error(`שגיאה בשליחת ההזמנה לספק ${supplierName}:`, error);
-          alert(`שגיאה בשליחת ההזמנה לספק ${supplierName}`);
+          console.error("שגיאה בשליחת ההזמנה:", error);
+          alert("שגיאה בשליחת ההזמנה");
         });
-    });
+    } else {
+      // לוגיקת הזמנה עבור מנהל (הקוד הקיים)
+      const ordersBySupplier = {};
+      orderList.forEach((item) => {
+        const supplierId = item.Supplier_Name;
+        if (!ordersBySupplier[supplierId]) {
+          ordersBySupplier[supplierId] = [];
+        }
+        ordersBySupplier[supplierId].push({
+          product_id: item.id,
+          quantity: item.Quantity,
+        });
+      });
+
+      Object.keys(ordersBySupplier).forEach((supplierName) => {
+        axios
+          .get(`orders/supplier/${supplierName}`)
+          .then((supplierRes) => {
+            const orderData = {
+              user_id: 1,
+              supplier_id: supplierRes.data.id,
+              items: ordersBySupplier[supplierName],
+            };
+            return axios.post("orders", orderData);
+          })
+          .then((res) => {
+            alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
+            if (Object.keys(ordersBySupplier).length === 1) {
+              setOrderList([]);
+              fetchData();
+            }
+          })
+          .catch((error) => {
+            console.error(`שגיאה בשליחת ההזמנה לספק ${supplierName}:`, error);
+            alert(`שגיאה בשליחת ההזמנה לספק ${supplierName}`);
+          });
+      });
+    }
   };
 
   function filterorder() {
@@ -149,36 +170,42 @@ export default function Order() {
             </option>
           ))}
         </select>
-        <select
-          value={selectedSupplier}
-          onChange={(e) => setSelectedSupplier(e.target.value)}
-          style={{
-            padding: "8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            backgroundColor: "white",
-          }}
-        >
-          <option value="">בחר ספק</option>
-          {suppliers.map((supplier) => (
-            <option key={supplier.name} value={supplier.name}>
-              {supplier.name}
-            </option>
-          ))}
-        </select>
+        {userRole === "admin" && (
+          <select
+            value={selectedSupplier}
+            onChange={(e) => setSelectedSupplier(e.target.value)}
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+              backgroundColor: "white",
+            }}
+          >
+            <option value="">בחר ספק</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.name} value={supplier.name}>
+                {supplier.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <TableComponent data={orderList} />
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
-          בצע הזמנה
+          {userRole === "client" ? "שלח הזמנה" : "בצע הזמנה מספקים"}
         </button>
-        <button onClick={filterorder} className="btn">
-          צריך להזמין
-        </button>
-        <button onClick={filterbaek} className="btn">
-          הצג הכול
-        </button>
+        {userRole === "admin" && (
+          <>
+            <button onClick={filterorder} className="btn">
+              צריך להזמין
+            </button>
+            <button onClick={filterbaek} className="btn">
+              הצג הכול
+            </button>
+          </>
+        )}
       </div>
 
       <div className="products-grid">
