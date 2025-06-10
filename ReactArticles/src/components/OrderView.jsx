@@ -4,20 +4,34 @@ import axios from "axios";
 import ExportReport from "../external_comonets/ExportReport/ExportReport";
 import TableComponent from "../external_comonets/table/table";
 
-function OrderView() {
+function OrderView({ userRole }) {
   const { id } = useParams();
   const [orderDetails, setOrderDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
+    const endpoint =
+      userRole === "client" ? `/client/${id}` : `/orders/details/${id}`;
+
     axios
-      .get(`/orders/details/${id}`)
+      .get(endpoint)
       .then((res) => {
         setOrderDetails(res.data);
+        setError(null);
       })
       .catch((error) => {
         console.error("Error fetching order details:", error);
+        setError("שגיאה בטעינת פרטי ההזמנה");
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [id]);
+  }, [id, userRole]);
+
+  if (loading) return <div>טוען...</div>;
+  if (error) return <div>{error}</div>;
 
   const totalPrice = orderDetails
     .reduce((total, order) => {
@@ -31,7 +45,9 @@ function OrderView() {
     <div className="main">
       <section className="post">
         <div className="container">
-          <h1 className="post-title">הזמנה מספר {id}</h1>
+          <h1 className="post-title">
+            {userRole === "client" ? "פרטי הזמנה מספר" : "הזמנה מספק מספר"} {id}
+          </h1>
           <div className="single-post">
             <div
               style={{
@@ -41,8 +57,8 @@ function OrderView() {
                 marginBottom: "20px",
               }}
             >
-              <p style={{ margin: 0 }}>₪{totalPrice} :מחיר ההזמנה</p>
-              <ExportReport list={orderDetails} />
+              <p style={{ margin: 0 }}>סה"כ לתשלום: ₪{totalPrice}</p>
+              {userRole === "admin" && <ExportReport list={orderDetails} />}
             </div>
             <TableComponent data={orderDetails} />
           </div>

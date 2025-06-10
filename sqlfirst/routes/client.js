@@ -123,12 +123,14 @@ router.get("/:id", (req, res) => {
   const query = `
 SELECT 
   p.id,
+  s.name AS Supplier_Name,
   c.name AS Category,
   p.Product_Name,
   p.Price,
   oic.quantity AS Quantity,
   DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
 FROM products p
+JOIN suppliers s ON p.supplier_id = s.id
 JOIN categories c ON p.category_id = c.id
 JOIN order_items_client oic ON oic.product_id = p.id
 WHERE oic.order_id = ?;
