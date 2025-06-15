@@ -6,28 +6,7 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-// router.get("/candles", (req, res) => {
-//   const query = `
-// SELECT
-//   MONTH(o.created_at) AS month,
-//   COUNT(o.id) AS store_orders,
-//   (
-//     SELECT COUNT(*)
-//     FROM orders_client oc
-//     WHERE MONTH(oc.created_at) = MONTH(o.created_at)
-//   ) AS client_orders
-// FROM orders o
-// GROUP BY MONTH(o.created_at)
-// ORDER BY MONTH(o.created_at);
-// `;
-//   db.query(query, (err, results) => {
-//     if (err) {
-//       res.status(500).send(err);
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
+
 
 router.get("/candles", (req, res) => {
   const { from, to } = req.query;
@@ -65,19 +44,51 @@ router.get("/candles", (req, res) => {
   });
 });
 
+// router.get("/cake", (req, res) => {
+//   const query = `
+// SELECT 
+//   users.name,
+//   COUNT(task.title) AS task_count
+// FROM 
+//   users
+// LEFT JOIN 
+//   task ON users.id = task.user_id 
+// GROUP BY 
+//   users.name;
+
+// `;
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       res.status(500).send(err);
+//       return;
+//     }
+//     res.json(results);
+//   });
+// });
+
+
+
 router.get("/cake", (req, res) => {
+  const { from, to } = req.query;
+
+  if (!from || !to) {
+    return res.status(400).json({ error: "Missing 'from' or 'to' parameters" });
+  }
+
   const query = `
-SELECT 
-  users.name,
-  COUNT(task.title) AS task_count
-FROM 
-  users
-LEFT JOIN 
-  task ON users.id = task.user_id
-GROUP BY 
-  users.name;
-`;
-  db.query(query, (err, results) => {
+    SELECT 
+      users.name,
+      COUNT(task.title) AS task_count
+    FROM 
+      users
+    LEFT JOIN 
+      task ON users.id = task.user_id 
+             AND task.date BETWEEN ? AND ?
+    GROUP BY 
+      users.name;
+  `;
+
+  db.query(query, [from, to], (err, results) => {
     if (err) {
       res.status(500).send(err);
       return;
@@ -85,6 +96,7 @@ GROUP BY
     res.json(results);
   });
 });
+
 
 router.get("/card", (req, res) => {
   const query = `

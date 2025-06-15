@@ -105,9 +105,25 @@ function MainPage({ username }) {
     fetchTaskData();
   }, []);
 
+  const [taskDateRange, setTaskDateRange] = useState({
+    from: new Date().getFullYear() + "-01-01", // Format: YYYY-MM-DD
+    to: new Date().getFullYear() + "-12-31", // Format: YYYY-MM-DD
+  });
+
   const fetchTaskData = () => {
+    // וידוא שהתאריכים נשלחים בפורמט הנכון
+    const fromDate =
+      taskDateRange.from + (taskDateRange.from.length === 7 ? "-01" : "");
+    const toDate =
+      taskDateRange.to + (taskDateRange.to.length === 7 ? "-31" : "");
+
     axios
-      .get("Dashboard/cake")
+      .get("Dashboard/cake", {
+        params: {
+          from: fromDate,
+          to: toDate,
+        },
+      })
       .then((res) => {
         setTaskCountList(res.data);
       })
@@ -157,7 +173,12 @@ function MainPage({ username }) {
           setDateRange={setDateRange}
           onDateChange={fetchData}
         />
-        <SimplePieChart data={taskCountList} />
+        <SimplePieChart
+          data={taskCountList}
+          dateRange={taskDateRange}
+          setDateRange={setTaskDateRange}
+          onDateChange={fetchTaskData}
+        />
       </div>
 
       <div

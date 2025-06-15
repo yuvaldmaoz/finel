@@ -42,9 +42,38 @@ const renderCustomLabel = ({
   );
 };
 
-const SimplePieChart = ({ data }) => (
+const SimplePieChart = ({ data, dateRange, setDateRange, onDateChange }) => (
   <div className="simple-pie-chart-container">
     <h2 className="simple-bar-chart-title">משימות לעובד</h2>
+    <div
+      style={{
+        display: "flex",
+        gap: "10px",
+        alignItems: "center",
+        marginBottom: "15px",
+      }}
+    >
+      <input
+        type="month"
+        value={dateRange.from}
+        onChange={(e) =>
+          setDateRange((prev) => ({ ...prev, from: e.target.value }))
+        }
+        style={{ padding: "5px" }}
+      />
+      <span>עד</span>
+      <input
+        type="month"
+        value={dateRange.to}
+        onChange={(e) =>
+          setDateRange((prev) => ({ ...prev, to: e.target.value }))
+        }
+        style={{ padding: "5px" }}
+      />
+      <button onClick={onDateChange} style={{ padding: "5px 10px" }}>
+        הצג
+      </button>
+    </div>
     <PieChart width={400} height={200}>
       <Pie
         data={data}
