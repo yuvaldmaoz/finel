@@ -39,6 +39,16 @@ function Header({ userRole, username , id }) {
                       שיבוצים 🗓️
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/tasks"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      משימות ✅
+                    </NavLink>
+                  </li>
                 </>
               )}
 
@@ -71,16 +81,6 @@ function Header({ userRole, username , id }) {
                 <>
                   <li>
                     <NavLink
-                      to="/tasks"
-                      className={({ isActive }) =>
-                        isActive ? classes.menuItemActive : classes.menuItem
-                      }
-                    >
-                      משימות ✅
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
                       to="/Inventory"
                       className={({ isActive }) =>
                         isActive ? classes.menuItemActive : classes.menuItem
@@ -90,6 +90,18 @@ function Header({ userRole, username , id }) {
                     </NavLink>
                   </li>
                 </>
+              )}
+              {userRole === "employe" && (
+                <li>
+                  <NavLink
+                    to="/employee"
+                    className={({ isActive }) =>
+                      isActive ? classes.menuItemActive : classes.menuItem
+                    }
+                  >
+                    דף עובד 👤
+                  </NavLink>
+                </li>
               )}
             </ul>
           </nav>
