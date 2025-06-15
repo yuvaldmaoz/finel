@@ -6,16 +6,57 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+// router.get("/candles", (req, res) => {
+//   const query = `
+// SELECT
+//   MONTH(o.created_at) AS month,
+//   COUNT(o.id) AS store_orders,
+//   (
+//     SELECT COUNT(*)
+//     FROM orders_client oc
+//     WHERE MONTH(oc.created_at) = MONTH(o.created_at)
+//   ) AS client_orders
+// FROM orders o
+// GROUP BY MONTH(o.created_at)
+// ORDER BY MONTH(o.created_at);
+// `;
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       res.status(500).send(err);
+//       return;
+//     }
+//     res.json(results);
+//   });
+// });
+
 router.get("/candles", (req, res) => {
+  const { from, to } = req.query;
+
+  if (!from || !to) {
+    return res.status(400).json({ error: "Missing 'from' or 'to' parameters" });
+  }
+
+  const fromDate = `${from}-01`; // YYYY-MM-01
+  const toDate = `${to}-31`; // YYYY-MM-31 (פשוט לסיום החודש)
+
   const query = `
-SELECT 
-  MONTH(created_at) AS month,
-  COUNT(*) AS total_objects
-FROM orders
-GROUP BY YEAR(created_at), MONTH(created_at)
-ORDER BY YEAR(created_at), MONTH(created_at);
-`;
-  db.query(query, (err, results) => {
+    SELECT 
+      MONTH(o.created_at) AS month,
+      COUNT(o.id) AS store_orders,
+      (
+        SELECT COUNT(*) 
+        FROM orders_client oc 
+        WHERE 
+          MONTH(oc.created_at) = MONTH(o.created_at)
+          AND oc.created_at BETWEEN ? AND ?
+      ) AS client_orders
+    FROM orders o
+    WHERE o.created_at BETWEEN ? AND ?
+    GROUP BY MONTH(o.created_at)
+    ORDER BY MONTH(o.created_at);
+  `;
+
+  db.query(query, [fromDate, toDate, fromDate, toDate], (err, results) => {
     if (err) {
       res.status(500).send(err);
       return;
@@ -51,7 +92,9 @@ SELECT 'orders' AS tables, COUNT(*) AS total_objects FROM orders
 UNION ALL
 SELECT 'task', COUNT(*) FROM task
 UNION ALL
-SELECT 'users', COUNT(*) FROM users;
+SELECT 'employ', COUNT(*) FROM users WHERE role = "employe" OR role = "admin"
+UNION ALL
+SELECT 'client', COUNT(*) FROM users WHERE role = "client";
 `;
   db.query(query, (err, results) => {
     if (err) {

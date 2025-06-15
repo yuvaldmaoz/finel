@@ -78,9 +78,19 @@ function MainPage({ username }) {
     fetchData();
   }, []);
 
+  const [dateRange, setDateRange] = useState({
+    from: new Date().getFullYear() + "-01", // Default to current year, January
+    to: new Date().getFullYear() + "-12", // Default to current year, December
+  });
+
   const fetchData = () => {
     axios
-      .get("Dashboard/candles")
+      .get("Dashboard/candles", {
+        params: {
+          from: dateRange.from,
+          to: dateRange.to,
+        },
+      })
       .then((res) => {
         setcandlesList(res.data);
       })
@@ -122,6 +132,12 @@ function MainPage({ username }) {
         console.error("Error fetching shifts:", error);
       });
   };
+  const data = [
+    { month: "ינואר", client_orders: 24, store_orders: 14 },
+    { month: "פברואר", client_orders: 30, store_orders: 10 },
+    { month: "מרץ", client_orders: 18, store_orders: 20 },
+    { month: "אפריל", client_orders: 22, store_orders: 16 },
+  ];
 
   return (
     <div>
@@ -135,7 +151,12 @@ function MainPage({ username }) {
       </div>
 
       <div className="charts-row">
-        <SimpleBarChart data={candlesList} />
+        <SimpleBarChart
+          data={candlesList}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          onDateChange={fetchData}
+        />
         <SimplePieChart data={taskCountList} />
       </div>
 

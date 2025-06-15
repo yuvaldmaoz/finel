@@ -11,7 +11,7 @@
   margin: 16px 12px; /* יותר ריווח בין הגרפים */
   position: relative;
   width: 50%; /* יתפוס את כל הרוחב של הקונטיינר */
-  height: 300px;
+  height: 350px;
   /* border: none;  אין גבול */
 }
 .simple-bar-chart-title {
