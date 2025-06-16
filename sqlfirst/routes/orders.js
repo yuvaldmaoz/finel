@@ -46,6 +46,109 @@ router.get("/by-supplier", (req, res) => {
 // Create a new order
 // This endpoint creates a new order and updates the stock of products
 
+// router.post("/", (req, res) => {
+//   const { user_id, items, supplier_id } = req.body;
+
+//   if (!user_id || !Array.isArray(items) || items.length === 0 || !supplier_id) {
+//     return res.status(400).json({ error: "Invalid request payload" });
+//   }
+
+//   const productIds = items.map((item) => item.product_id);
+//   const checkProductsQuery = "SELECT id FROM products WHERE id IN (?)";
+
+//   db.query(checkProductsQuery, [productIds], (err, result) => {
+//     if (err) {
+//       return res.status(500).json({ error: "Failed to check products" });
+//     }
+
+//     const existingProductIds = result.map((product) => product.id);
+//     const invalidProductIds = productIds.filter(
+//       (id) => !existingProductIds.includes(id)
+//     );
+
+//     if (invalidProductIds.length > 0) {
+//       return res.status(400).json({
+//         error: `Invalid product IDs: ${invalidProductIds.join(", ")}`,
+//       });
+//     }
+
+//     db.beginTransaction((err) => {
+//       if (err) return res.status(500).json({ error: "Transaction error" });
+
+//       // כאן הוספנו supplier_id בשאילתת ההכנסה להזמנה
+//       const orderQuery =
+//         "INSERT INTO orders (user_id, supplier_id) VALUES (?, ?)";
+//       db.query(orderQuery, [user_id, supplier_id], (err, result) => {
+//         if (err) {
+//           db.rollback(() =>
+//             res.status(500).json({ error: "Order creation failed" })
+//           );
+//           return;
+//         }
+
+//         const orderId = result.insertId;
+//         const orderItems = items.map((item) => [
+//           orderId,
+//           item.product_id,
+//           item.quantity,
+//         ]);
+
+//         const itemsQuery = `
+//           INSERT INTO order_items (order_id, product_id, quantity)
+//           VALUES ?
+//         `;
+
+//         db.query(itemsQuery, [orderItems], (err) => {
+//           if (err) {
+//             db.rollback(() =>
+//               res.status(500).json({ error: "Order items creation failed" })
+//             );
+//             return;
+//           }
+
+//           // כאן יש את עדכון המלאי - שים לב שכרגע הוא מוסיף למלאי (יכול להיות שצריך להפחית)
+//           const stockUpdateValues = items.map((item) => [
+//             item.product_id,
+//             item.quantity,
+//           ]);
+
+//           const updateStockQuery = `
+//             INSERT INTO products (id, Quantity)
+//             VALUES ?
+//             ON DUPLICATE KEY UPDATE Quantity = VALUES(Quantity) + products.Quantity;
+//           `;
+
+//           db.query(updateStockQuery, [stockUpdateValues], (err) => {
+//             if (err) {
+//               db.rollback(() =>
+//                 res.status(500).json({ error: "Stock update failed" })
+//               );
+//               return;
+//             }
+
+//             db.commit((err) => {
+//               if (err) {
+//                 db.rollback(() =>
+//                   res.status(500).json({ error: "Transaction commit failed" })
+//                 );
+//                 return;
+//               }
+
+//               res.status(201).json({
+//                 message: "Order created successfully, stock updated",
+//                 orderId,
+//               });
+//             });
+//           });
+//         });
+//       });
+//     });
+//   });
+// });
+
+
+
+
 router.post("/", (req, res) => {
   const { user_id, items, supplier_id } = req.body;
 
@@ -75,9 +178,12 @@ router.post("/", (req, res) => {
     db.beginTransaction((err) => {
       if (err) return res.status(500).json({ error: "Transaction error" });
 
-      // כאן הוספנו supplier_id בשאילתת ההכנסה להזמנה
-      const orderQuery =
-        "INSERT INTO orders (user_id, supplier_id) VALUES (?, ?)";
+      // יצירת הזמנה עם status = 'open'
+      const orderQuery = `
+        INSERT INTO orders (user_id, supplier_id, status)
+        VALUES (?, ?, 'open')
+      `;
+
       db.query(orderQuery, [user_id, supplier_id], (err, result) => {
         if (err) {
           db.rollback(() =>
@@ -106,38 +212,18 @@ router.post("/", (req, res) => {
             return;
           }
 
-          // כאן יש את עדכון המלאי - שים לב שכרגע הוא מוסיף למלאי (יכול להיות שצריך להפחית)
-          const stockUpdateValues = items.map((item) => [
-            item.product_id,
-            item.quantity,
-          ]);
-
-          const updateStockQuery = `
-            INSERT INTO products (id, Quantity)
-            VALUES ?
-            ON DUPLICATE KEY UPDATE Quantity = VALUES(Quantity) + products.Quantity;
-          `;
-
-          db.query(updateStockQuery, [stockUpdateValues], (err) => {
+          db.commit((err) => {
             if (err) {
               db.rollback(() =>
-                res.status(500).json({ error: "Stock update failed" })
+                res.status(500).json({ error: "Transaction commit failed" })
               );
               return;
             }
 
-            db.commit((err) => {
-              if (err) {
-                db.rollback(() =>
-                  res.status(500).json({ error: "Transaction commit failed" })
-                );
-                return;
-              }
-
-              res.status(201).json({
-                message: "Order created successfully, stock updated",
-                orderId,
-              });
+            res.status(201).json({
+              message:
+                "Order created successfully (status: open). Stock will be updated on close.",
+              orderId,
             });
           });
         });
@@ -145,6 +231,79 @@ router.post("/", (req, res) => {
     });
   });
 });
+
+router.post("/:orderId/close", (req, res) => {
+  const orderId = req.params.orderId;
+
+  // שלב 1: בדיקה אם ההזמנה קיימת ופתוחה
+  db.query(
+    "SELECT * FROM orders WHERE id = ? AND status = 'open'",
+    [orderId],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "DB error" });
+      if (results.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Order not found or already closed" });
+      }
+
+      // שלב 2: קבלת פריטי ההזמנה
+      db.query(
+        "SELECT product_id, quantity FROM order_items WHERE order_id = ?",
+        [orderId],
+        (err, items) => {
+          if (err)
+            return res.status(500).json({ error: "Failed to get order items" });
+
+          // שלב 3: עדכון המלאי
+          const values = items.map((item) => [item.product_id, item.quantity]);
+          const updateStockQuery = `
+            INSERT INTO products (id, Quantity)
+            VALUES ?
+            ON DUPLICATE KEY UPDATE Quantity = Quantity + VALUES(Quantity);
+          `;
+
+          db.query(updateStockQuery, [values], (err) => {
+            if (err)
+              return res.status(500).json({ error: "Stock update failed" });
+
+            // שלב 4: עדכון סטטוס להזמנה ל־closed
+            db.query(
+              "UPDATE orders SET status = 'closed' WHERE id = ?",
+              [orderId],
+              (err) => {
+                if (err)
+                  return res
+                    .status(500)
+                    .json({ error: "Failed to update order status" });
+
+                res.json({ message: "Order closed and stock updated" });
+              }
+            );
+          });
+        }
+      );
+    }
+  );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
