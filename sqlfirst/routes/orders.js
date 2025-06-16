@@ -6,7 +6,6 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-
 // Example usage:
 // GET /orders/by-supplier?supplier=tnuva&startDate=2025-06-06&endDate=2025-06-08
 // GET /orders/by-supplier - Returns all orders
@@ -147,9 +146,6 @@ router.post("/", (req, res) => {
   });
 });
 
-
-
-
 router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -178,5 +174,21 @@ router.get("/details/:id", (req, res) => {
 });
 
 
+router.get("/supplier/:name", (req, res) => {
+  const supplierName = req.params.name;
+  const query = "SELECT id FROM `suppliers` WHERE name = ?";
+
+  db.query(query, [supplierName], (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (results.length === 0) {
+      res.status(404).json({ error: "Supplier not found" });
+      return;
+    }
+    res.json(results[0]);
+  });
+});
 
 module.exports = router;
