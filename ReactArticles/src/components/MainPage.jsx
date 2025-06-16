@@ -153,12 +153,7 @@ function MainPage({ username }) {
         console.error("Error fetching shifts:", error);
       });
   };
-  const data = [
-    { month: "ינואר", client_orders: 24, store_orders: 14 },
-    { month: "פברואר", client_orders: 30, store_orders: 10 },
-    { month: "מרץ", client_orders: 18, store_orders: 20 },
-    { month: "אפריל", client_orders: 22, store_orders: 16 },
-  ];
+
 
   return (
     <div>
@@ -184,6 +179,19 @@ function MainPage({ username }) {
         </div>
         <TableComponent data={criticalList} />
       </div>
+      <div
+        className="simple-bar-chart-container"
+        style={{
+          width: "98%",
+          margin: "20px auto 0 auto",
+          display: "block",
+        }}
+      >
+        <h2 className="simple-bar-chart-title">משימות שלי</h2>
+        <div className="task-scroll-area">
+          <TaskComponent tasks={tasks} onToggleStatus={toggleTaskStatus} />
+        </div>
+      </div>
 
       <div className="charts-row">
         <SimpleBarChart
@@ -200,19 +208,6 @@ function MainPage({ username }) {
         />
       </div>
 
-      <div
-        className="simple-bar-chart-container"
-        style={{
-          width: "98%",
-          margin: "20px auto 0 auto",
-          display: "block",
-        }}
-      >
-        <h2 className="simple-bar-chart-title">משימות שלי</h2>
-        <div className="task-scroll-area">
-          <TaskComponent tasks={tasks} onToggleStatus={toggleTaskStatus} />
-        </div>
-      </div>
       <div
         className="simple-bar-chart-container"
         style={{ width: "98%", margin: "20px auto 0 auto" }}
