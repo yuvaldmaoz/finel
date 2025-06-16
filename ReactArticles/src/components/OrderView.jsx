@@ -10,7 +10,7 @@ function OrderView({ userRole }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchData = () => {
     setLoading(true);
     const endpoint =
       userRole === "client" ? `/client/${id}` : `/orders/details/${id}`;
@@ -28,7 +28,22 @@ function OrderView({ userRole }) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [id, userRole]);
+
+  const handleCloseOrder = () => {
+    axios
+      .post(`/orders/${id}/close`)
+      .then(() => {
+        fetchData(); // רענון הנתונים לאחר סגירה
+      })
+      .catch((error) => {
+        console.error("Error closing order:", error);
+      });
+  };
 
   if (loading) return <div>טוען...</div>;
   if (error) return <div>{error}</div>;
@@ -48,6 +63,7 @@ function OrderView({ userRole }) {
           <h1 className="post-title">
             {userRole === "client" ? "פרטי הזמנה מספר" : "הזמנה מספק מספר"} {id}
           </h1>
+
           <div className="single-post">
             <div
               style={{
@@ -60,6 +76,11 @@ function OrderView({ userRole }) {
               <p style={{ margin: 0 }}>סה"כ לתשלום: ₪{totalPrice}</p>
               {userRole === "admin" && <ExportReport list={orderDetails} />}
             </div>
+
+            {userRole === "admin" && (
+              <button onClick={handleCloseOrder}>סגור הזמנה</button>
+            )}
+
             <TableComponent data={orderDetails} />
           </div>
         </div>
