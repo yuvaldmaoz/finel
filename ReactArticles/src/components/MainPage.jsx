@@ -39,14 +39,19 @@ function MainPage({ username }) {
   };
 
   const [criticalList, setcriticalList] = useState([]);
+  const [criticalFilter, setCriticalFilter] = useState("all"); // אפשרויות: all, Quantity, Expiration_Date
 
   useEffect(() => {
     fetchcriticalData();
-  }, []);
+  }, [criticalFilter]);
 
   const fetchcriticalData = () => {
     axios
-      .get("Dashboard/critical")
+      .get("Dashboard/critical", {
+        params: {
+          filter: criticalFilter,
+        },
+      })
       .then((res) => {
         setcriticalList(res.data);
       })
@@ -163,6 +168,20 @@ function MainPage({ username }) {
         style={{ width: "98%", margin: "0 auto" }}
       >
         <h2 className="simple-bar-chart-title">מלאי קריטי</h2>
+
+        <div>
+          <select
+            value={criticalFilter}
+            onChange={(e) => {
+              setCriticalFilter(e.target.value);
+              fetchcriticalData();
+            }}
+          >
+            <option value="all">הכל</option>
+            <option value="Quantity">כמות נמוכה</option>
+            <option value="Expiration_Date">תוקף קרוב</option>
+          </select>
+        </div>
         <TableComponent data={criticalList} />
       </div>
 

@@ -118,22 +118,35 @@ SELECT 'client', COUNT(*) FROM users WHERE role = "client";
 });
 
 router.get("/critical", (req, res) => {
+  const { filter } = req.query;
+
+  let whereClause = "";
+  if (filter === "Quantity") {
+    whereClause = "p.Quantity < 5";
+  } else if (filter === "Expiration_Date") {
+    whereClause = "DATEDIFF(p.Expiration_Date, CURDATE()) <= 5";
+  } else {
+    // ברירת מחדל: מציג את כל הקריטיים (שני התנאים)
+    whereClause =
+      "p.Quantity < 5 OR DATEDIFF(p.Expiration_Date, CURDATE()) <= 5";
+  }
+
   const query = `
-  SELECT 
-    p.id,
-    s.id AS supplier_id,
-    s.name AS Supplier_Name,
-    c.name AS Category,
-    p.Product_Name,
-    p.Price,
-    p.Quantity,
-    DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
-  FROM products p
-  JOIN suppliers s ON p.supplier_id = s.id
-  JOIN categories c ON p.category_id = c.id
-  WHERE p.Quantity < 5
-     OR DATEDIFF(p.Expiration_Date, CURDATE()) <= 5;
-`;
+    SELECT 
+      p.id,
+      s.id AS supplier_id,
+      s.name AS Supplier_Name,
+      c.name AS Category,
+      p.Product_Name,
+      p.Price,
+      p.Quantity,
+      DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    FROM products p
+    JOIN suppliers s ON p.supplier_id = s.id
+    JOIN categories c ON p.category_id = c.id
+    WHERE ${whereClause};
+  `;
+
   db.query(query, (err, results) => {
     if (err) {
       res.status(500).send(err);
@@ -142,5 +155,6 @@ router.get("/critical", (req, res) => {
     res.json(results);
   });
 });
+
 
 module.exports = router;
