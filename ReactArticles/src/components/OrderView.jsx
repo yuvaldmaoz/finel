@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ExportReport from "../external_comonets/ExportReport/ExportReport";
 import TableComponent from "../external_comonets/table/table";
+import classes from "../external_comonets/window/window.module.css";
 
 function OrderView({ userRole }) {
   const { id } = useParams();
@@ -78,7 +79,17 @@ function OrderView({ userRole }) {
             </div>
 
             {userRole === "admin" && (
-              <button onClick={handleCloseOrder}>סגור הזמנה</button>
+              <button
+                style={{
+                  margin: 0,
+                  marginLeft: "auto", // Pushes button to the left
+                  display: "block", // Ensures block-level display
+                }}
+                className={classes.button}
+                onClick={handleCloseOrder}
+              >
+                סגור הזמנה
+              </button>
             )}
 
             <TableComponent data={orderDetails} />
