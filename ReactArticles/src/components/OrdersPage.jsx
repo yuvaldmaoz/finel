@@ -10,13 +10,14 @@ function OrdersPage({ userRole, id }) {
   const [suppliers, setSuppliers] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [status, setStatus] = useState("all"); // 🔄 חדש
 
   useEffect(() => {
     fetchOrders();
     if (userRole === "admin") {
       fetchSuppliers();
     }
-  }, [selectedSupplier, startDate, endDate, userRole]);
+  }, [selectedSupplier, startDate, endDate, status, userRole]); // 🔄 הוספנו status לתלות
 
   const fetchSuppliers = () => {
     axios
@@ -34,13 +35,16 @@ function OrdersPage({ userRole, id }) {
       let url = "/client";
       const params = new URLSearchParams();
 
-      params.append("user_id", id); // הוספת ה-user_id לפרמטרים
+      params.append("user_id", id);
 
       if (startDate) {
         params.append("startDate", startDate);
       }
       if (endDate) {
         params.append("endDate", endDate);
+      }
+      if (status !== "all") {
+        params.append("status", status);
       }
 
       const queryString = params.toString();
@@ -55,7 +59,6 @@ function OrdersPage({ userRole, id }) {
           console.error("Error fetching client orders:", error);
         });
     } else {
-      // לוגיקה קיימת עבור הזמנות ספקים למנהל
       let url = "/orders/by-supplier";
       const params = new URLSearchParams();
 
@@ -67,6 +70,9 @@ function OrdersPage({ userRole, id }) {
       }
       if (endDate) {
         params.append("endDate", endDate);
+      }
+      if (status !== "all") {
+        params.append("status", status);
       }
 
       const queryString = params.toString();
@@ -106,6 +112,18 @@ function OrdersPage({ userRole, id }) {
               ))}
             </select>
           )}
+
+          {/* 🔄 Select חדש לסטטוס ההזמנה */}
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={classes.filterInput}
+          >
+            <option value="all">כל הסטטוסים</option>
+            <option value="open">פתוחה</option>
+            <option value="closed">סגורה</option>
+          </select>
+
           <input
             type="date"
             value={startDate}

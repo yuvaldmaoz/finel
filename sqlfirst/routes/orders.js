@@ -13,26 +13,38 @@ router.get("/by-supplier", (req, res) => {
   const supplierName = req.query.supplier || "";
   const startDate = req.query.startDate || "";
   const endDate = req.query.endDate || "";
+  const status = req.query.status || "";
 
   const query = `
     SELECT 
       o.id,
       DATE_FORMAT(o.created_at, '%d/%m/%Y') AS created_at,
-      s.name AS supplier_name
+      s.name AS supplier_name,
+      o.status
     FROM orders o
     JOIN suppliers s ON o.supplier_id = s.id
     WHERE (s.name = ? OR ? = '')
-    AND (
-      CASE 
-        WHEN ? = '' OR ? = '' THEN 1
-        ELSE o.created_at BETWEEN ? AND ?
-      END
-    )
+      AND (
+        CASE 
+          WHEN ? = '' OR ? = '' THEN 1
+          ELSE o.created_at BETWEEN ? AND ?
+        END
+      )
+      AND (o.status = ? OR ? = '')
   `;
 
   db.query(
     query,
-    [supplierName, supplierName, startDate, endDate, startDate, endDate],
+    [
+      supplierName,
+      supplierName,
+      startDate,
+      endDate,
+      startDate,
+      endDate,
+      status,
+      status,
+    ],
     (err, results) => {
       if (err) {
         res.status(500).send(err);
@@ -42,6 +54,7 @@ router.get("/by-supplier", (req, res) => {
     }
   );
 });
+
 
 // Create a new order
 // This endpoint creates a new order and updates the stock of products

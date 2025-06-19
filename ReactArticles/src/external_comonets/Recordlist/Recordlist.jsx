@@ -12,6 +12,7 @@ export default function Recordlist(props) {
           id={item.id}
           date={item.created_at}
           supplier={item.supplier_name}
+          status={item.status}
         />
       ))}
     </div>

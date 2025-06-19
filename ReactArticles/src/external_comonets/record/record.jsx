@@ -10,7 +10,9 @@ export default function Record(props) {
   return (
     <div className={classes.container}>
       <div>
-        <div className={classes.supplier}>{props.supplier}</div>
+        <div className={classes.supplier}>
+          {props.supplier} | {props.status}
+        </div>
         <div className={classes.details}>
           מספר הזמנה: {props.id} | תאריך: {props.date}
         </div>
