@@ -69,7 +69,7 @@ function Inventory({ userRole }) {
     <div className={classes.container}>
       <div className={classes.header}>
         <h1 className={classes.title}>
-          {userRole === "client" ? "המלאי שלי" : "ניהול מלאי"}
+          ניהל מלאי
         </h1>
         <div className={classes.filterSection}>
           <input
