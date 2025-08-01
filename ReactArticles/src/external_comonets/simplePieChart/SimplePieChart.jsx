@@ -50,9 +50,12 @@ const SimplePieChart = ({ data, dateRange, setDateRange, onDateChange }) => (
         display: "flex",
         gap: "10px",
         alignItems: "center",
+
         marginBottom: "15px",
       }}
     >
+      <span>from :</span>
+
       <input
         type="month"
         value={dateRange.from}
@@ -61,7 +64,7 @@ const SimplePieChart = ({ data, dateRange, setDateRange, onDateChange }) => (
         }
         style={{ padding: "5px" }}
       />
-      <span>עד</span>
+      <span>to :</span>
       <input
         type="month"
         value={dateRange.to}
