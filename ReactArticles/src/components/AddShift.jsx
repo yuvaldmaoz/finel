@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ShiftsTable from "../external_comonets/shiftsTable/ShiftsTable";
+import styles from "../external_comonets/window/window.module.css"; // ייבוא סגנונות
 
 // יצירת מערך של 14 משמרות - 7 ימים כפול 2 משמרות (בוקר וערב)
 const shifts = [];
@@ -49,9 +49,6 @@ export default function AddShift() {
       return;
     }
 
-    // מדפיס את התוצאה בפורמט נוח לקריאה
-    //alert(JSON.stringify(result, null, 2));
-
     // הכנת גוף הבקשה בפורמט הנדרש
     const weekStartDateStr = startDate.toISOString().slice(0, 10);
     const ShiftData = {
@@ -62,7 +59,7 @@ export default function AddShift() {
     // שליחת הבקשה לשרת
     axios
       .post("Shift/schedules", ShiftData)
-      .then((res) => {
+      .then(() => {
         alert("הבוצעה בהצלחה!");
         // ...אם צריך איפוס שדות, הוסף כאן...
       })
@@ -74,7 +71,9 @@ export default function AddShift() {
 
   return (
     <div style={{ padding: "20px", direction: "rtl" }}>
-      <h2>סידור משמרות</h2>
+      {/* השתמש בסגנון הכותרת מהקובץ שהובא */}
+      <h2 className={styles.title}>סידור משמרות</h2>
+
       <div className="shifts-table-container">
         <table className="shifts-table">
           <thead>
@@ -105,6 +104,7 @@ export default function AddShift() {
           </tbody>
         </table>
       </div>
+
       <div style={{ marginTop: "20px", textAlign: "left" }}>
         {/* כפתור לשמירת הסידור */}
         <button className="save-btn" onClick={handleSave}>

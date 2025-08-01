@@ -93,11 +93,17 @@ function OrdersPage({ userRole, id }) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <div className={`${classes.header} ${classes.headerReverse}`}>
         <h1 className={classes.title}>
           {userRole === "client" ? "ההזמנות שלי" : "הזמנות מספקים"}
         </h1>
         <div className={classes.filterSection}>
+          <Link
+            to={userRole === "client" ? "/client/order" : "/Order"}
+            className={classes.button}
+          >
+            + הוסף הזמנה
+          </Link>
           {userRole === "admin" && (
             <select
               value={selectedSupplier}
@@ -138,12 +144,6 @@ function OrdersPage({ userRole, id }) {
             className={classes.filterInput}
             placeholder="תאריך סיום"
           />
-          <Link
-            to={userRole === "client" ? "/client/order" : "/Order"}
-            className={classes.button}
-          >
-            + הוסף הזמנה
-          </Link>
         </div>
       </div>
       <Window record={orders} />

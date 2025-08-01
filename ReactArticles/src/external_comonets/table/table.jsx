@@ -23,8 +23,22 @@ export default function TableComponent({ data }) {
               <td>{product.Price}</td>
               <td>{product.Category}</td>
               <td>{product.Product_Name}</td>
-              <td>{product.Quantity}</td>
-              <td>{product.Expiration_Date}</td>
+              <td
+                className={product.Quantity < 5 ? styles.lowStock : undefined}
+              >
+                {product.Quantity}
+              </td>
+              <td
+                className={(() => {
+                  const exp = new Date(product.Expiration_Date);
+                  const now = new Date();
+                  const diff = (exp - now) / (1000 * 60 * 60 * 24); // difference in days
+                  // If the difference is less than 2 days OR expiration date has passed, apply lowStock style
+                  return diff <= 5 ? styles.lowStock : undefined;
+                })()}
+              >
+                {product.Expiration_Date}
+              </td>
             </tr>
           ))}
         </tbody>

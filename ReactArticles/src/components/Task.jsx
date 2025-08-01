@@ -60,7 +60,9 @@ export default function Task() {
 
   return (
     <div className={styles["tasker-container"]}>
-      <div className={styles["tasker-header"]}>
+      <div
+        className={`${styles["tasker-header"]} ${styles["tasker-header-reverse"]}`}
+      >
         <h1>משימות</h1>
         <button
           className={styles["new-task-btn"]}

@@ -25,7 +25,7 @@ function Shifts() {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <div className={`${classes.header} ${classes.headerReverse}`}>
         <h1 className={classes.title}>שיבוצים</h1>
         <Link to="/add-shift" className={classes.button}>
           + הוסף שיבוץ

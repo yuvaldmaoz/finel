@@ -126,7 +126,7 @@ export default function Order({ userRole, id }) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <div className={`${classes.header} ${classes.headerReverse}`}>
         <h1 className={classes.title}>הוסף הזמנה</h1>
         <div className={classes.filterSection}>
           <input

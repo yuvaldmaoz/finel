@@ -40,6 +40,11 @@
   background-color: red;
 }
 
+.lowStock {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 10px;

@@ -14,6 +14,13 @@
   padding: 0 1rem;
 }
 
+.headerReverse {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .title {
   font-size: 2.5rem;
   color: #333;

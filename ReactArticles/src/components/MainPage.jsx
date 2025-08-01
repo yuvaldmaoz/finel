@@ -8,6 +8,7 @@ import SimplePieChart from "../external_comonets/simplePieChart/SimplePieChart";
 import TableComponent from "../external_comonets/table/table";
 import TaskComponent from "../external_comonets/task/task";
 import ShiftsTable from "../external_comonets/shiftsTable/ShiftsTable";
+import classes from "../external_comonets/window/window.module.css";
 
 function MainPage({ username }) {
   const [tasks, setTasks] = useState([]);
@@ -154,7 +155,6 @@ function MainPage({ username }) {
       });
   };
 
-
   return (
     <div>
       <Cardlist list={cardList} />
@@ -171,6 +171,7 @@ function MainPage({ username }) {
               setCriticalFilter(e.target.value);
               fetchcriticalData();
             }}
+            className={classes.filterInput}
           >
             <option value="all">הכל</option>
             <option value="Quantity">כמות נמוכה</option>

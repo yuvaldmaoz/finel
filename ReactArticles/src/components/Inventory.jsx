@@ -67,11 +67,15 @@ function Inventory({ userRole }) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
-        <h1 className={classes.title}>
-          ניהל מלאי
-        </h1>
-        <div className={classes.filterSection}>
+      <div className={`${classes.header} ${classes.headerReverse}`}>
+        <h1 className={classes.title}>ניהל מלאי</h1>
+        <div
+          className={classes.filterSection}
+          style={{ display: "flex", gap: "12px", alignItems: "center" }}
+        >
+          <div style={{ marginRight: "auto" }}>
+            <ExportReport list={list} />
+          </div>
           <input
             type="text"
             placeholder="חפש מוצר..."
@@ -90,6 +94,7 @@ function Inventory({ userRole }) {
               </option>
             ))}
           </select>
+
           <select
             value={selectedSupplier}
             onChange={(e) => setSelectedSupplier(e.target.value)}
@@ -102,7 +107,6 @@ function Inventory({ userRole }) {
               </option>
             ))}
           </select>
-          <ExportReport list={list} />
         </div>
       </div>
 
