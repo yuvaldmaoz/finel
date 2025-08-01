@@ -61,12 +61,12 @@ export default function Task() {
   return (
     <div className={styles["tasker-container"]}>
       <div className={styles["tasker-header"]}>
-        <h1>Tasker</h1>
+        <h1>משימות</h1>
         <button
           className={styles["new-task-btn"]}
           onClick={() => setShowAddPopup(true)}
         >
-          New
+          + הוסף משימה
         </button>
       </div>
       <div className="container">

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TableComponent from "../external_comonets/table/table";
 import ExportReport from "../external_comonets/ExportReport/ExportReport";
+import classes from "../external_comonets/window/window.module.css"; // משתמש ב-css של ההזמנות
 
-function Inventory() {
+function Inventory({ userRole }) {
   const [list, setlist] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -64,37 +65,24 @@ function Inventory() {
       });
   };
 
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-  };
-
   return (
-    <div className="main">
-      <div className="container">
-        <div className="articles-container">
+    <div className={classes.container}>
+      <div className={classes.header}>
+        <h1 className={classes.title}>
+          {userRole === "client" ? "המלאי שלי" : "ניהול מלאי"}
+        </h1>
+        <div className={classes.filterSection}>
           <input
             type="text"
             placeholder="חפש מוצר..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              padding: "8px",
-              margin: "10px 0",
-              width: "200px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
+            className={classes.filterInput}
           />
           <select
             value={selectedCategory}
-            onChange={handleCategoryChange}
-            style={{
-              padding: "8px",
-              margin: "10px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              backgroundColor: "white",
-            }}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={classes.filterInput}
           >
             {categories.map((category) => (
               <option key={category.value} value={category.value}>
@@ -105,13 +93,7 @@ function Inventory() {
           <select
             value={selectedSupplier}
             onChange={(e) => setSelectedSupplier(e.target.value)}
-            style={{
-              padding: "8px",
-              margin: "10px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              backgroundColor: "white",
-            }}
+            className={classes.filterInput}
           >
             <option value="">בחר ספק</option>
             {suppliers.map((supplier) => (
@@ -121,8 +103,11 @@ function Inventory() {
             ))}
           </select>
           <ExportReport list={list} />
-          <TableComponent data={list} />
         </div>
+      </div>
+
+      <div className="container">
+        <TableComponent data={list} />
       </div>
     </div>
   );

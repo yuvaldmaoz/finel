@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import TableComponent from "../external_comonets/table/table";
 import Product from "../external_comonets/product/product";
+import classes from "../external_comonets/window/window.module.css";
 
 export default function Order({ userRole, id }) {
-  const [productList, setProductList] = useState([]); // מוצרים מהשרת
-  const [orderList, setOrderList] = useState([]); // מוצרים שנבחרו להזמנה
-  const [searchTerm, setSearchTerm] = useState(""); // מונח חיפוש
-  const [selectedCategory, setSelectedCategory] = useState(""); // קטגוריה מסוננת
+  const [productList, setProductList] = useState([]);
+  const [orderList, setOrderList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [categories, setCategories] = useState([
@@ -26,23 +26,15 @@ export default function Order({ userRole, id }) {
       .get(
         `products/search?name=${searchTerm}&category=${selectedCategory}&supplier=${selectedSupplier}`
       )
-      .then((res) => {
-        setProductList(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
+      .then((res) => setProductList(res.data))
+      .catch((error) => console.error("Error fetching products:", error));
   };
 
   const fetchSuppliers = () => {
     axios
       .get("suppliers")
-      .then((res) => {
-        setSuppliers(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching suppliers:", error);
-      });
+      .then((res) => setSuppliers(res.data))
+      .catch((error) => console.error("Error fetching suppliers:", error));
   };
 
   const fetchCategories = () => {
@@ -58,9 +50,7 @@ export default function Order({ userRole, id }) {
           ...formattedCategories,
         ]);
       })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
+      .catch((error) => console.error("Error fetching categories:", error));
   };
 
   const submitOrder = () => {
@@ -70,18 +60,16 @@ export default function Order({ userRole, id }) {
     }
 
     if (userRole === "client") {
-      // לוגיקת הזמנה עבור לקוח
       const orderData = {
-        user_id: id, // צריך לקבל את ה-ID האמיתי של המשתמש
+        user_id: id,
         items: orderList.map((item) => ({
           product_id: item.id,
           quantity: item.Quantity,
         })),
       };
-
       axios
         .post("client", orderData)
-        .then((res) => {
+        .then(() => {
           alert("ההזמנה בוצעה בהצלחה!");
           setOrderList([]);
           fetchData();
@@ -91,13 +79,10 @@ export default function Order({ userRole, id }) {
           alert("שגיאה בשליחת ההזמנה");
         });
     } else {
-      // לוגיקת הזמנה עבור מנהל (הקוד הקיים)
       const ordersBySupplier = {};
       orderList.forEach((item) => {
         const supplierId = item.Supplier_Name;
-        if (!ordersBySupplier[supplierId]) {
-          ordersBySupplier[supplierId] = [];
-        }
+        if (!ordersBySupplier[supplierId]) ordersBySupplier[supplierId] = [];
         ordersBySupplier[supplierId].push({
           product_id: item.id,
           quantity: item.Quantity,
@@ -115,7 +100,7 @@ export default function Order({ userRole, id }) {
             };
             return axios.post("orders", orderData);
           })
-          .then((res) => {
+          .then(() => {
             alert(`הזמנה לספק ${supplierName} בוצעה בהצלחה!`);
             if (Object.keys(ordersBySupplier).length === 1) {
               setOrderList([]);
@@ -130,68 +115,57 @@ export default function Order({ userRole, id }) {
     }
   };
 
-  function filterorder() {
-    const originalList = [...productList]; // Assuming originalList is the initial productList
-    // Removed unused variable 'text'
+  const filterorder = () => {
+    const originalList = [...productList];
     setProductList(originalList.filter((el) => el.Quantity < 5));
-  }
-  function filterbaek() {
-    fetchData(); // Reset the productList to its original state by fetching data again
-  }
+  };
+
+  const filterbaek = () => {
+    fetchData();
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="חפש מוצר..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: "8px",
-            width: "200px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          style={{
-            padding: "8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            backgroundColor: "white",
-          }}
-        >
-          {categories.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.label}
-            </option>
-          ))}
-        </select>
-        {userRole === "admin" && (
+    <div className={classes.container}>
+      <div className={classes.header}>
+        <h1 className={classes.title}>הוסף הזמנה</h1>
+        <div className={classes.filterSection}>
+          <input
+            type="text"
+            placeholder="חפש מוצר..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={classes.filterInput}
+          />
           <select
-            value={selectedSupplier}
-            onChange={(e) => setSelectedSupplier(e.target.value)}
-            style={{
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              backgroundColor: "white",
-            }}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={classes.filterInput}
           >
-            <option value="">בחר ספק</option>
-            {suppliers.map((supplier) => (
-              <option key={supplier.name} value={supplier.name}>
-                {supplier.name}
+            {categories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
               </option>
             ))}
           </select>
-        )}
+          {userRole === "admin" && (
+            <select
+              value={selectedSupplier}
+              onChange={(e) => setSelectedSupplier(e.target.value)}
+              className={classes.filterInput}
+            >
+              <option value="">בחר ספק</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.name} value={supplier.name}>
+                  {supplier.name}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
 
       <TableComponent data={orderList} />
+
       <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
         <button onClick={submitOrder} className="btn">
           {userRole === "client" ? "שלח הזמנה" : "בצע הזמנה מספקים"}

@@ -64,17 +64,19 @@ function Header({ userRole, username, id }) {
                       הזמנות 📦
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink
-                      to="/Order"
-                      className={({ isActive }) =>
-                        isActive ? classes.menuItemActive : classes.menuItem
-                      }
-                    >
-                      הזמנה חדשה ➕
-                    </NavLink>
-                  </li>
                 </>
+              )}
+              {userRole === "client" && (
+                <li>
+                  <NavLink
+                    to="/Order"
+                    className={({ isActive }) =>
+                      isActive ? classes.menuItemActive : classes.menuItem
+                    }
+                  >
+                    הזמנה חדשה ➕
+                  </NavLink>
+                </li>
               )}
 
               {(userRole === "admin" || userRole === "employe") && (

@@ -6,13 +6,13 @@ export default function TableComponent({ data }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Supplier Name</th>
-            <th>Price (₪)</th>
-            <th>Category</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Expiration Date</th>
+            <th>מקט</th>
+            <th>שם ספק</th>
+            <th>מחיר (₪)</th>
+            <th>קטגוריה</th>
+            <th>שם מוצר</th>
+            <th>כמות</th>
+            <th>תאריך תפוגה</th>
           </tr>
         </thead>
         <tbody>
@@ -21,9 +21,7 @@ export default function TableComponent({ data }) {
               <td>{product.id}</td>
               <td>{product.Supplier_Name}</td>
               <td>{product.Price}</td>
-              <td >
-                {product.Category}
-              </td>
+              <td>{product.Category}</td>
               <td>{product.Product_Name}</td>
               <td>{product.Quantity}</td>
               <td>{product.Expiration_Date}</td>
