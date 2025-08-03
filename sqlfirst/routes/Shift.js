@@ -6,6 +6,9 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+
+
+// GET /shifts - מחזיר את כל לוחות הזמנים של המשמרות
 router.get("/", (req, res) => {
   const query =
     "SELECT id, DATE_FORMAT(week_start_date, '%d/%m/%Y') AS week_start_date FROM `shifts_schedule`;";
@@ -41,6 +44,10 @@ WHERE Shifts_Schedule.id = ?
   });
 });
 
+
+
+// POST /shifts/schedules - יצירת לוח זמנים חדש עם משמרות
+// המשמרות יתווספו ללוח הזמנים שנוצר
 router.post("/schedules", (req, res) => {
   const { week_start_date, shifts } = req.body;
 

@@ -6,9 +6,7 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-// Example usage:
-// GET /orders/by-supplier?supplier=tnuva&startDate=2025-06-06&endDate=2025-06-08
-// GET /orders/by-supplier - Returns all orders
+// GET /orders/by-supplier - מחזיר את ההזמנות לפי ספק, תאריכים וסטטוס (אם נמסרו בפרמטרים)
 router.get("/by-supplier", (req, res) => {
   const supplierName = req.query.supplier || "";
   const startDate = req.query.startDate || "";
@@ -27,7 +25,7 @@ router.get("/by-supplier", (req, res) => {
       AND (
         CASE 
           WHEN ? = '' OR ? = '' THEN 1
-          ELSE o.created_at BETWEEN ? AND ?
+          ELSE o.created_at BETWEEN ? AND ? 
         END
       )
       AND (o.status = ? OR ? = '')
@@ -55,113 +53,7 @@ router.get("/by-supplier", (req, res) => {
   );
 });
 
-
-// Create a new order
-// This endpoint creates a new order and updates the stock of products
-
-// router.post("/", (req, res) => {
-//   const { user_id, items, supplier_id } = req.body;
-
-//   if (!user_id || !Array.isArray(items) || items.length === 0 || !supplier_id) {
-//     return res.status(400).json({ error: "Invalid request payload" });
-//   }
-
-//   const productIds = items.map((item) => item.product_id);
-//   const checkProductsQuery = "SELECT id FROM products WHERE id IN (?)";
-
-//   db.query(checkProductsQuery, [productIds], (err, result) => {
-//     if (err) {
-//       return res.status(500).json({ error: "Failed to check products" });
-//     }
-
-//     const existingProductIds = result.map((product) => product.id);
-//     const invalidProductIds = productIds.filter(
-//       (id) => !existingProductIds.includes(id)
-//     );
-
-//     if (invalidProductIds.length > 0) {
-//       return res.status(400).json({
-//         error: `Invalid product IDs: ${invalidProductIds.join(", ")}`,
-//       });
-//     }
-
-//     db.beginTransaction((err) => {
-//       if (err) return res.status(500).json({ error: "Transaction error" });
-
-//       // כאן הוספנו supplier_id בשאילתת ההכנסה להזמנה
-//       const orderQuery =
-//         "INSERT INTO orders (user_id, supplier_id) VALUES (?, ?)";
-//       db.query(orderQuery, [user_id, supplier_id], (err, result) => {
-//         if (err) {
-//           db.rollback(() =>
-//             res.status(500).json({ error: "Order creation failed" })
-//           );
-//           return;
-//         }
-
-//         const orderId = result.insertId;
-//         const orderItems = items.map((item) => [
-//           orderId,
-//           item.product_id,
-//           item.quantity,
-//         ]);
-
-//         const itemsQuery = `
-//           INSERT INTO order_items (order_id, product_id, quantity)
-//           VALUES ?
-//         `;
-
-//         db.query(itemsQuery, [orderItems], (err) => {
-//           if (err) {
-//             db.rollback(() =>
-//               res.status(500).json({ error: "Order items creation failed" })
-//             );
-//             return;
-//           }
-
-//           // כאן יש את עדכון המלאי - שים לב שכרגע הוא מוסיף למלאי (יכול להיות שצריך להפחית)
-//           const stockUpdateValues = items.map((item) => [
-//             item.product_id,
-//             item.quantity,
-//           ]);
-
-//           const updateStockQuery = `
-//             INSERT INTO products (id, Quantity)
-//             VALUES ?
-//             ON DUPLICATE KEY UPDATE Quantity = VALUES(Quantity) + products.Quantity;
-//           `;
-
-//           db.query(updateStockQuery, [stockUpdateValues], (err) => {
-//             if (err) {
-//               db.rollback(() =>
-//                 res.status(500).json({ error: "Stock update failed" })
-//               );
-//               return;
-//             }
-
-//             db.commit((err) => {
-//               if (err) {
-//                 db.rollback(() =>
-//                   res.status(500).json({ error: "Transaction commit failed" })
-//                 );
-//                 return;
-//               }
-
-//               res.status(201).json({
-//                 message: "Order created successfully, stock updated",
-//                 orderId,
-//               });
-//             });
-//           });
-//         });
-//       });
-//     });
-//   });
-// });
-
-
-
-
+// POST /orders - יצירת הזמנה חדשה עם פריטים; המלאי יתעדכן רק בסגירת ההזמנה
 router.post("/", (req, res) => {
   const { user_id, items, supplier_id } = req.body;
 
@@ -245,6 +137,7 @@ router.post("/", (req, res) => {
   });
 });
 
+// POST /orders/:orderId/close - סגירת הזמנה ועדכון מלאי בהתאם לפריטים שבה
 router.post("/:orderId/close", (req, res) => {
   const orderId = req.params.orderId;
 
@@ -300,24 +193,7 @@ router.post("/:orderId/close", (req, res) => {
   );
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// GET /orders/details/:id - מחזיר פרטי פריטים בהזמנה לפי מזהה ההזמנה
 router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -345,7 +221,7 @@ router.get("/details/:id", (req, res) => {
   });
 });
 
-
+// GET /orders/supplier/:name - מחזיר את מזהה הספק לפי שמו
 router.get("/supplier/:name", (req, res) => {
   const supplierName = req.params.name;
   const query = "SELECT id FROM `suppliers` WHERE name = ?";

@@ -6,8 +6,7 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-
-
+// הפונקציה מחזירה נתונים עבור גרף עמודות (candles) של הזמנות חנות והזמנות לקוח לפי חודשים
 router.get("/candles", (req, res) => {
   const { from, to } = req.query;
 
@@ -44,30 +43,7 @@ router.get("/candles", (req, res) => {
   });
 });
 
-// router.get("/cake", (req, res) => {
-//   const query = `
-// SELECT 
-//   users.name,
-//   COUNT(task.title) AS task_count
-// FROM 
-//   users
-// LEFT JOIN 
-//   task ON users.id = task.user_id 
-// GROUP BY 
-//   users.name;
-
-// `;
-//   db.query(query, (err, results) => {
-//     if (err) {
-//       res.status(500).send(err);
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
-
-
-
+// הפונקציה מחזירה נתונים עבור גרף עוגה (cake) של מספר משימות לכל עובד בטווח תאריכים
 router.get("/cake", (req, res) => {
   const { from, to } = req.query;
 
@@ -97,7 +73,7 @@ router.get("/cake", (req, res) => {
   });
 });
 
-
+// הפונקציה מחזירה סיכום של מספר אובייקטים עיקריים במערכת (הזמנות, משימות, עובדים, לקוחות)
 router.get("/card", (req, res) => {
   const query = `
 SELECT 'orders' AS tables, COUNT(*) AS total_objects FROM orders
@@ -117,6 +93,7 @@ SELECT 'client', COUNT(*) FROM users WHERE role = "client";
   });
 });
 
+// הפונקציה מחזירה מוצרים קריטיים לפי כמות נמוכה או תוקף פג תוקף
 router.get("/critical", (req, res) => {
   const { filter } = req.query;
 
@@ -155,6 +132,5 @@ router.get("/critical", (req, res) => {
     res.json(results);
   });
 });
-
 
 module.exports = router;

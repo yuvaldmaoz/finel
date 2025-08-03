@@ -6,6 +6,10 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+
+
+// GET /tasks - מחזיר את כל המשימות
+// This endpoint retrieves all tasks from the database
 router.get("/", (req, res) => {
   const query = `
     SELECT 
@@ -26,6 +30,9 @@ router.get("/", (req, res) => {
   });
 });
 
+
+
+// GET /tasks/:id - מחזיר משימה לפי מזהה
 router.post("/:id", (req, res) => {
   const { id } = req.params;
   const query = `
@@ -44,6 +51,9 @@ router.post("/:id", (req, res) => {
 
 
 
+
+
+// POST /tasks - יצירת משימה חדשה
 router.post("/", (req, res) => {
   const { title, status, user_id, date } = req.body;
   const query = `

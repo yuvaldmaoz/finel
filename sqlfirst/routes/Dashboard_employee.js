@@ -6,6 +6,7 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+// הפונקציה מחזירה את כל המשימות של עובד לפי שמו
 router.get("/", (req, res) => {
   const { name } = req.query;
 
@@ -29,6 +30,7 @@ router.get("/", (req, res) => {
   });
 });
 
+// הפונקציה מחזירה את המשמרות של עובד לפי שמו ולפי השבוע האחרון
 router.get("/Shift", (req, res) => {
   const { name } = req.query;
   const query = `
@@ -55,7 +57,5 @@ WHERE users.name = ?
   });
 });
 
-
-
-
+module.exports = router;
 module.exports = router;

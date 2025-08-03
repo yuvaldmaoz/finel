@@ -6,6 +6,11 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+
+
+
+// GET /suppliers - מחזיר את כל הספקים
+// This endpoint retrieves all suppliers from the database
 router.get("/", (req, res) => {
   const query = `
 SELECT name FROM suppliers;

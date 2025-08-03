@@ -6,8 +6,9 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
-// Get all categories
-
+/**
+ * יצירת הזמנה חדשה ללקוח ועדכון מלאי המוצרים
+ */
 router.post("/", (req, res) => {
   const { user_id, items } = req.body;
 
@@ -91,12 +92,13 @@ router.post("/", (req, res) => {
   });
 });
 
-// Get all orders for a client
+/**
+ * שליפת כל ההזמנות של לקוח לפי מזהה ותאריכים
+ */
 router.get("/", (req, res) => {
   const startDate = req.query.startDate || "";
   const endDate = req.query.endDate || "";
   const user_id = req.query.user_id;
-
 
   const query = `
     SELECT 
@@ -111,16 +113,22 @@ router.get("/", (req, res) => {
       )
   `;
 
-  db.query(query, [user_id, startDate, endDate, startDate, endDate], (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
+  db.query(
+    query,
+    [user_id, startDate, endDate, startDate, endDate],
+    (err, results) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json(results);
     }
-    res.json(results);
-  });
+  );
 });
 
-// Get all orders for a client
+/**
+ * שליפת פרטי הזמנה לפי מזהה הזמנה
+ */
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
