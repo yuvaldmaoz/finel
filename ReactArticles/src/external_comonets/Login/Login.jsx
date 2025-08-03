@@ -15,10 +15,15 @@ export default function Login({ onLogin }) {
       .post("users/Login", { email, password })
       .then((response) => {
         if (response.data.message === "Login successful") {
-          const isAdmin = response.data.role === "admin";
-          alert(isAdmin ? "התחברת בהצלחה כמנהל!" : "התחברת בהצלחה כעובד!");
-          onLogin(response.data.role, response.data.name, response.data.id);
-          navigate("/Home");
+          const role = response.data.role;
+          onLogin(role, response.data.name, response.data.id);
+          if (role === "admin") {
+            navigate("/Home");
+          } else if (role === "employe") {
+            navigate("/employee");
+          } else if (role === "client") {
+            navigate("/orders");
+          }
         }
       })
       .catch((error) => {
