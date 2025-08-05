@@ -7,6 +7,13 @@ const router = express.Router();
 const db = dbSingleton.getConnection();
 
 // הפונקציה מחזירה נתונים עבור גרף עמודות (candles) של הזמנות חנות והזמנות לקוח לפי חודשים
+// דוגמת בקשת GET:
+// /Dashboard/candles?from=2023&to=2023
+// דוגמת תשובה:
+// [
+//   { month: 1, store_orders: 10, client_orders: 5 },
+//   { month: 2, store_orders: 8, client_orders: 3
+// ]
 router.get("/candles", (req, res) => {
   const { from, to } = req.query;
 
@@ -44,6 +51,13 @@ router.get("/candles", (req, res) => {
 });
 
 // הפונקציה מחזירה נתונים עבור גרף עוגה (cake) של מספר משימות לכל עובד בטווח תאריכים
+// דוגמת בקשת GET:
+// /Dashboard/cake?from=2023-01-01&to=2023
+// דוגמת תשובה:
+// [
+//   { name: "John", task_count: 5 },
+//   { name: "Jane", task_count: 3 }
+// ]
 router.get("/cake", (req, res) => {
   const { from, to } = req.query;
 
@@ -74,6 +88,15 @@ router.get("/cake", (req, res) => {
 });
 
 // הפונקציה מחזירה סיכום של מספר אובייקטים עיקריים במערכת (הזמנות, משימות, עובדים, לקוחות)
+// דוגמת בקשת GET:
+// /Dashboard/card
+// דוגמת תשובה:
+// [
+//   { tables: "orders", total_objects: 100 },
+//   { tables: "task", total_objects: 50 },
+//   { tables: "employ", total_objects: 20 },
+//   { tables: "client", total_objects: 30 }
+// ]
 router.get("/card", (req, res) => {
   const query = `
 SELECT 'orders' AS tables, COUNT(*) AS total_objects FROM orders
@@ -94,6 +117,13 @@ SELECT 'client', COUNT(*) FROM users WHERE role = "client";
 });
 
 // הפונקציה מחזירה מוצרים קריטיים לפי כמות נמוכה או תוקף פג תוקף
+// דוגמת בקשת GET:
+// /Dashboard/critical?filter=Quantity
+// דוגמת תשובה:
+// [
+//   { id: 1, supplier_id: 2, Supplier_Name: "Supplier A", Category: "Category X", Product_Name: "Product 1", Price: 100.00, Quantity: 3, Expiration_Date: "31/12/2025" },
+//   { id: 2, supplier_id: 3, Supplier_Name: "Supplier B", Category: "Category Y", Product_Name: "Product 2", Price: 50.00, Quantity: 1, Expiration_Date: "30/11/2025" }
+// ]
 router.get("/critical", (req, res) => {
   const { filter } = req.query;
 

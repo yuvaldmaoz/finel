@@ -9,6 +9,14 @@ const db = dbSingleton.getConnection();
 
 
 // GET /shifts - מחזיר את כל לוחות הזמנים של המשמרות
+// דוגמת מערך מוחזר:
+// [
+//   {
+//     "id": 1,
+//     "week_start_date": "01/01/2023"
+//   }, 
+//   ...
+// ]
 router.get("/", (req, res) => {
   const query =
     "SELECT id, DATE_FORMAT(week_start_date, '%d/%m/%Y') AS week_start_date FROM `shifts_schedule`;";
@@ -21,6 +29,18 @@ router.get("/", (req, res) => {
   });
 });
 
+
+// GET /shifts/:id - מחזיר את המשמרות לפי מזהה לוח הזמנים
+// דוגמת מערך מוחזר:
+// [
+//   {
+//     "UserName": "John Doe",
+//     "ShiftDate": "01/01/2023",
+//     "ShiftType": "Morning",
+//     "WeekStartDate": "01/01/2023"
+//   },
+//   ...
+// ]
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -48,6 +68,22 @@ WHERE Shifts_Schedule.id = ?
 
 // POST /shifts/schedules - יצירת לוח זמנים חדש עם משמרות
 // המשמרות יתווספו ללוח הזמנים שנוצר
+// דוגמת בקשת POST:
+// {
+//   "week_start_date": "01/01/2023",
+//   "shifts": [
+//     {
+//       "shift_date": "01/01/2023",
+//       "shift_type": "Morning",
+//       "user_id": 1
+//     },
+//     {
+//       "shift_date": "01/01/2023",
+//       "shift_type": "Evening",
+//       "user_id": 2
+//     }
+//   ]
+// }
 router.post("/schedules", (req, res) => {
   const { week_start_date, shifts } = req.body;
 

@@ -44,7 +44,7 @@ const renderCustomLabel = ({
 
 const SimplePieChart = ({ data, dateRange, setDateRange, onDateChange }) => (
   <div className="simple-pie-chart-container">
-    <h2 className="simple-bar-chart-title">משימות לעובד</h2>
+    <h2 className="simple-bar-chart-title">משימות לעובדים</h2>
     <div
       style={{
         display: "flex",

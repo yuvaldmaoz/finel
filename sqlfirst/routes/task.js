@@ -10,6 +10,15 @@ const db = dbSingleton.getConnection();
 
 // GET /tasks - מחזיר את כל המשימות
 // This endpoint retrieves all tasks from the database
+// Example response:
+// [
+//   {
+//     "id": 1,
+//     "title": "Task 1",
+//     "status": "pending",
+//     "user_id": 1,
+//     "date": "2023-10-01"
+//   },
 router.get("/", (req, res) => {
   const query = `
     SELECT 
