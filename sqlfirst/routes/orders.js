@@ -7,6 +7,15 @@ const router = express.Router();
 const db = dbSingleton.getConnection();
 
 // GET /orders/by-supplier - מחזיר את ההזמנות לפי ספק, תאריכים וסטטוס (אם נמסרו בפרמטרים)
+//דוגמא מערך מוחזר:
+// [  
+//   {
+//     "id": 1,
+//     "created_at": "01/01/2023",
+//     "supplier_name": "Supplier A",
+//     "status": "open"
+//   }, 
+// ]   
 router.get("/by-supplier", (req, res) => {
   const supplierName = req.query.supplier || "";
   const startDate = req.query.startDate || "";
@@ -54,6 +63,21 @@ router.get("/by-supplier", (req, res) => {
 });
 
 // POST /orders - יצירת הזמנה חדשה עם פריטים; המלאי יתעדכן רק בסגירת ההזמנה
+// דוגמת בקשת POST:
+// {
+//   "user_id": 5,
+//   "items": [
+//     {
+//       "product_id": 10,
+//       "quantity": 2
+//     },
+//     {
+//       "product_id": 20,
+//       "quantity": 1
+//     }
+//   ],
+//   "supplier_id": 3
+// }
 router.post("/", (req, res) => {
   const { user_id, items, supplier_id } = req.body;
 
@@ -138,6 +162,11 @@ router.post("/", (req, res) => {
 });
 
 // POST /orders/:orderId/close - סגירת הזמנה ועדכון מלאי בהתאם לפריטים שבה
+// דוגמת בקשת POST:
+// {
+//   "orderId": 1
+// }
+
 router.post("/:orderId/close", (req, res) => {
   const orderId = req.params.orderId;
 
@@ -194,6 +223,18 @@ router.post("/:orderId/close", (req, res) => {
 });
 
 // GET /orders/details/:id - מחזיר פרטי פריטים בהזמנה לפי מזהה ההזמנה
+//דוגמא למערך המוחזר:
+// [
+//   {
+//     "id": 1,
+//     "supplier_name": "Supplier A",
+//     "category": "Category A",
+//     "Product_Name": "Product A",
+//     "Price": 100.00,
+//     "Quantity": 2,
+//     "Expiration_Date": "01/01/2025"
+//   }
+// ]
 router.get("/details/:id", (req, res) => {
   const orderId = req.params.id;
   const query = `
@@ -222,6 +263,12 @@ router.get("/details/:id", (req, res) => {
 });
 
 // GET /orders/supplier/:name - מחזיר את מזהה הספק לפי שמו
+//המערך המוחזר:
+// [
+//   {
+//     "id": 1
+//   }
+// ]
 router.get("/supplier/:name", (req, res) => {
   const supplierName = req.params.name;
   const query = "SELECT id FROM `suppliers` WHERE name = ?";

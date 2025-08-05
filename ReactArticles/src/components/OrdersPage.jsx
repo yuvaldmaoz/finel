@@ -104,10 +104,7 @@ function OrdersPage({ userRole, id }) {
           {userRole === "client" ? "ההזמנות שלי" : "הזמנות מספקים"}
         </h1>
         <div className={classes.filterSection}>
-          <Link
-            to={userRole === "client" ? "/client/order" : "/Order"}
-            className={classes.button}
-          >
+          <Link to="/Order" className={classes.button}>
             + הוסף הזמנה
           </Link>
           {userRole === "admin" && (

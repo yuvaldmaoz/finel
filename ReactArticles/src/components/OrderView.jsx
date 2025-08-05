@@ -17,6 +17,12 @@ function OrderView({ userRole }) {
       userRole === "client" ? `/client/${id}` : `/orders/details/${id}`;
 
     axios
+    // 🔄 אם התפקיד הוא לקוח, נשלח בקשה לשרת עם מזהה הלקו
+    // דוגמא בקשת GET:
+    // /client/123
+    // אם התפקיד הוא מנהל, נשלח בקשה לשרת עם מזהה ההזמנה
+    // דוגמא בקשת GET:      
+    // /orders/details/123
       .get(endpoint)
       .then((res) => {
         setOrderDetails(res.data);
@@ -31,12 +37,15 @@ function OrderView({ userRole }) {
       });
   };
 
+
+  
   useEffect(() => {
     fetchData();
   }, [id, userRole]);
 
   const handleCloseOrder = () => {
     axios
+    // 🔄 אם התפקיד הוא מנהל, נשלח בקשה לשרת לסגירת ההזמנה
       .post(`/orders/${id}/close`)
       .then(() => {
         fetchData(); // רענון הנתונים לאחר סגירה
@@ -75,6 +84,7 @@ function OrderView({ userRole }) {
               }}
             >
               <p style={{ margin: 0 }}>סה"כ לתשלום: ₪{totalPrice}</p>
+              {/* 🔄 כפתור ייצוא דוח */}
               {userRole === "admin" && <ExportReport list={orderDetails} />}
             </div>
 

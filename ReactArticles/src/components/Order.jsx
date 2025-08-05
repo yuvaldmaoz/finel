@@ -15,6 +15,7 @@ export default function Order({ userRole, id }) {
     { value: "", label: "בחר קטגוריה" },
   ]);
 
+  // רכיבוי התנהגות ברירת מחדל של React כדי למנוע רינדור כפול
   useEffect(() => {
     fetchData();
     fetchSuppliers();
@@ -23,6 +24,7 @@ export default function Order({ userRole, id }) {
 
   const fetchData = () => {
     axios
+    //רשימת המוצרים לאחר סינון לפי חיפוש, קטגוריה וספק
       .get(
         `products/search?name=${searchTerm}&category=${selectedCategory}&supplier=${selectedSupplier}`
       )
@@ -32,6 +34,7 @@ export default function Order({ userRole, id }) {
 
   const fetchSuppliers = () => {
     axios
+      //רשימת הספקים
       .get("suppliers")
       .then((res) => setSuppliers(res.data))
       .catch((error) => console.error("Error fetching suppliers:", error));
@@ -39,6 +42,7 @@ export default function Order({ userRole, id }) {
 
   const fetchCategories = () => {
     axios
+      //רשימת הקטגוריות 
       .get("categories")
       .then((res) => {
         const formattedCategories = res.data.map((cat) => ({
@@ -53,12 +57,14 @@ export default function Order({ userRole, id }) {
       .catch((error) => console.error("Error fetching categories:", error));
   };
 
+  //שליחת ההזמנה
   const submitOrder = () => {
     if (orderList.length === 0) {
       alert("לא נוספו מוצרים להזמנה.");
       return;
     }
 
+    // אם המשתמש הוא לקוח, נשלח את ההזמנה כבקשת POST
     if (userRole === "client") {
       const orderData = {
         user_id: id,
@@ -68,6 +74,21 @@ export default function Order({ userRole, id }) {
         })),
       };
       axios
+        //שליחת ההזמנה לשרת
+        //דוגמא בקשת POST:
+        // {
+        //   "user_id": 5,
+        //   "items": [
+        //     {
+        //       "product_id": 12,
+        //       "quantity": 3
+        //     },
+        //     {
+        //       "product_id": 7,
+        //       "quantity": 1
+        //     }
+        //   ]
+        // }
         .post("client", orderData)
         .then(() => {
           alert("ההזמנה בוצעה בהצלחה!");
@@ -78,6 +99,25 @@ export default function Order({ userRole, id }) {
           console.error("שגיאה בשליחת ההזמנה:", error);
           alert("שגיאה בשליחת ההזמנה");
         });
+
+      // אם המשתמש הוא מנהל, נשלח את ההזמנה לספקים
+      // שליחת הזמנות לכל ספק בנפרד
+      // דוגמא בקשת POST:
+      // {
+      //   "user_id": 1,
+      //   "supplier_id": 3,
+      //   "items": [
+      //     {
+      //       "product_id": 10,
+      //       "quantity": 2
+      //     },
+      //     {
+      //       "product_id": 20,
+      //       "quantity": 1
+      //     }
+      //   ]
+      // }
+      // כל הזמנה תישלח לספק המתאים
     } else {
       const ordersBySupplier = {};
       orderList.forEach((item) => {
