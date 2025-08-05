@@ -4,6 +4,7 @@ import logo from "../assets/img/logo.png";
 import classes from "../assets/styles/Header.module.css";
 
 function Header({ userRole, username, id }) {
+  // חשיפת המשתמש בתפריט הניווט
   return (
     <header className={classes.header}>
       <div className="container">

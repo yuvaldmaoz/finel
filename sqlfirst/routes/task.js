@@ -33,6 +33,16 @@ router.get("/", (req, res) => {
 
 
 // GET /tasks/:id - מחזיר משימה לפי מזהה
+// דוגמא למערך מוחזר:
+// [
+//   {
+//     "id": 1,
+//     "title": "Task 1",
+//     "status": "pending",
+//     "user_id": 1,
+//     "date": "2023-10-01"
+//   }
+// ]
 router.post("/:id", (req, res) => {
   const { id } = req.params;
   const query = `
@@ -54,6 +64,13 @@ router.post("/:id", (req, res) => {
 
 
 // POST /tasks - יצירת משימה חדשה
+// דוגמת בקשת POST:
+// {
+//   "title": "New Task",
+//   "status": "pending",
+//   "user_id": 1,
+//   "date": "2023-10-01"
+// }
 router.post("/", (req, res) => {
   const { title, status, user_id, date } = req.body;
   const query = `

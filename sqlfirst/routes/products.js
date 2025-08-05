@@ -7,6 +7,25 @@ const router = express.Router();
 const db = dbSingleton.getConnection();
 /**
  * מחזיר את כל המוצרים עם אפשרות לחיפוש לפי שם, קטגוריה וספק
+ * דוגמת בקשת GET:
+ * /products/search?name=productName&category=categoryName&supplier=supplierName
+ * המערך המוחזר:
+ * [
+ *  {
+ *   "id": 1,
+ *  "supplier_id": 2,
+ *  "Supplier_Name": "Supplier A",
+ * "Category": "Category X",
+ * "Product_Name": "Product 1",
+ * "Price": 100.00,
+ * "Quantity": 10,
+ * "Expiration_Date": "31/12/2025"
+ *  },
+ * ...
+ * ]
+ * לא חייב למלא את כול ה הפרמטרים, אפשר להשאיר ריקים
+ * אם לא ממלאים כלום, מחזיר את כל המוצרים
+ * כמו אצל ממשק המשתמש
  */
 
 router.get("/search", (req, res) => {

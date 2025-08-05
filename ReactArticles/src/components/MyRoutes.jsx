@@ -31,6 +31,7 @@ function MyRoutes() {
     setUserId(id);
   };
 
+  //מתן ניתוב לדפים בהתאם לתפקיד המשתמש וביצוע בדיקות אימות
   return (
     <div className="App">
       <div className="sidebar">

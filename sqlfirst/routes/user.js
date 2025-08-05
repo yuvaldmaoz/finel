@@ -28,16 +28,7 @@ router.get("/name", (req, res) => {
   });
 });
 
-// router.get("/login", (req, res) => {
-//   const query = "SELECT id, email, password, role, name FROM users";
-//   db.query(query, (err, results) => {
-//     if (err) {
-//       res.status(500).send(err);
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
+
 
 const bcrypt = require("bcrypt");
 
