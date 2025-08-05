@@ -50,6 +50,9 @@ function OrdersPage({ userRole, id }) {
       const queryString = params.toString();
       url += `?${queryString}`;
 
+      // 🔄 אם התפקיד הוא לקוח, נשלח בקשה לשרת עם מזהה הלקו
+      // דוגמא בקשת GET:
+      // /client?user_id=5&startDate=2023-01-01&endDate=2023-12-31
       axios
         .get(url)
         .then((response) => {
@@ -79,6 +82,9 @@ function OrdersPage({ userRole, id }) {
       if (queryString) {
         url += `?${queryString}`;
       }
+      // 🔄 אם התפקיד הוא מנהל, נשלח בקשה לשרת עם פרמטרים לספק, תאריכים וסטטו
+      // דוגמא בקשת GET:
+      // /orders/by-supplier?supplier=SupplierName&startDate=2023-01-01&endDate=2023-12-31&status=open
 
       axios
         .get(url)
@@ -105,31 +111,34 @@ function OrdersPage({ userRole, id }) {
             + הוסף הזמנה
           </Link>
           {userRole === "admin" && (
-            <select
-              value={selectedSupplier}
-              onChange={(e) => setSelectedSupplier(e.target.value)}
-              className={classes.filterInput}
-            >
-              <option value="all">כל הספקים</option>
-              {suppliers.map((supplier, index) => (
-                <option key={index} value={supplier.name}>
-                  {supplier.name}
-                </option>
-              ))}
-            </select>
+            <>
+              <select
+                value={selectedSupplier}
+                onChange={(e) => setSelectedSupplier(e.target.value)}
+                className={classes.filterInput}
+              >
+                <option value="all">כל הספקים</option>
+                {suppliers.map((supplier, index) => (
+                  <option key={index} value={supplier.name}>
+                    {supplier.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className={classes.filterInput}
+              >
+                <option value="all">כל הסטטוסים</option>
+                <option value="open">פתוחה</option>
+                <option value="closed">סגורה</option>
+              </select>
+            </>
           )}
 
           {/* 🔄 Select חדש לסטטוס ההזמנה */}
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className={classes.filterInput}
-          >
-            <option value="all">כל הסטטוסים</option>
-            <option value="open">פתוחה</option>
-            <option value="closed">סגורה</option>
-          </select>
-          
+
           <input
             type="date"
             value={startDate}

@@ -8,7 +8,21 @@ const db = dbSingleton.getConnection();
 
 /**
  * יצירת הזמנה חדשה ללקוח ועדכון מלאי המוצרים
- */
+  * דוגמת בקשת POST:
+{
+  "user_id": 5,
+  "items": [
+    {
+      "product_id": 12,
+      "quantity": 3
+    },
+    {
+      "product_id": 7,
+      "quantity": 1
+    }
+  ]
+} */
+
 router.post("/", (req, res) => {
   const { user_id, items } = req.body;
 
@@ -28,6 +42,8 @@ router.post("/", (req, res) => {
         return;
       }
 
+
+      // יצירת רשומות פריטי ההזמנה
       const orderId = result.insertId;
       const orderItems = items.map((item) => [
         orderId,
@@ -92,8 +108,26 @@ router.post("/", (req, res) => {
   });
 });
 
+
+
+
 /**
  * שליפת כל ההזמנות של לקוח לפי מזהה ותאריכים
+ * דוגמת בקשת GET:
+ * /client?user_id=5&startDate=2023-01-01&endDate=2023-12-31
+ * הערך המוחזר הוא מערך של הזמנות, כולל מזהה ההזמנה ותאריך יצירתה
+ * [
+  {
+    "id": 101,
+    "created_at": "05/08/2025",
+    "user_id": 5
+  },
+  {
+    "id": 102,
+    "created_at": "10/08/2025",
+    "user_id": 5
+  }
+]
  */
 router.get("/", (req, res) => {
   const startDate = req.query.startDate || "";
@@ -128,6 +162,28 @@ router.get("/", (req, res) => {
 
 /**
  * שליפת פרטי הזמנה לפי מזהה הזמנה
+ * דוגמת בקשת GET:
+ * /client/9
+ * הערך המוחזר הוא מערך של פריטים בהזמנה, כולל פרטי המוצר, הספק והקטגוריה
+ * [
+  {
+    "id": 1,
+    "Supplier_Name": "Supplier A",
+    "Category": "Category X",
+    "Product_Name": "Product 1",
+    "Price": 100.00,
+    "Quantity": 2,
+    "Expiration_Date": "31/12/2025"
+  },
+  {
+    "id": 2,
+    "Supplier_Name": "Supplier B",
+    "Category": "Category Y",
+    "Product_Name": "Product 2",
+    "Price": 50.00,
+    "Quantity": 1,
+    "Expiration_Date": "30/11/2025"
+  }
  */
 router.get("/:id", (req, res) => {
   const orderId = req.params.id;
