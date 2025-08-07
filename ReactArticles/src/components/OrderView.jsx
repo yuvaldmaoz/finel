@@ -102,7 +102,7 @@ function OrderView({ userRole }) {
               </button>
             )}
 
-            <TableComponent data={orderDetails} />
+            <TableComponent data={orderDetails}  role={userRole} />
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import styles from "./tableComponent.module.css";
 
-export default function TableComponent({ data }) {
+export default function TableComponent({ data, role }) {
   return (
     <div className={styles.container}>
       <table className={styles.table}>
@@ -12,7 +12,7 @@ export default function TableComponent({ data }) {
             <th>קטגוריה</th>
             <th>שם מוצר</th>
             <th>כמות</th>
-            <th>תאריך תפוגה</th>
+            {role !== "admin" && <th>תאריך תפוגה</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,17 +28,18 @@ export default function TableComponent({ data }) {
               >
                 {product.Quantity}
               </td>
-              <td
-                className={(() => {
-                  const exp = new Date(product.Expiration_Date);
-                  const now = new Date();
-                  const diff = (exp - now) / (1000 * 60 * 60 * 24); // difference in days
-                  // If the difference is less than 2 days OR expiration date has passed, apply lowStock style
-                  return diff <= 5 ? styles.lowStock : undefined;
-                })()}
-              >
-                {product.Expiration_Date}
-              </td>
+              {role !== "admin" && (
+                <td
+                  className={(() => {
+                    const exp = new Date(product.Expiration_Date);
+                    const now = new Date();
+                    const diff = (exp - now) / (1000 * 60 * 60 * 24); // difference in days
+                    return diff <= 5 ? styles.lowStock : undefined;
+                  })()}
+                >
+                  {product.Expiration_Date}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
