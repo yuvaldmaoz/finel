@@ -311,8 +311,7 @@ router.get("/details/:id", (req, res) => {
     c.name AS Category,
     p.Product_Name,
     p.Price,
-    ri.quantity AS Quantity,
-    DATE_FORMAT(p.Expiration_Date, '%d/%m/%Y') AS Expiration_Date
+    ri.quantity AS Quantity
   FROM products p
   JOIN suppliers s ON p.supplier_id = s.id
   JOIN categories c ON p.category_id = c.id
@@ -341,4 +340,3 @@ module.exports = router;
 
 
 
-module.exports = router;
