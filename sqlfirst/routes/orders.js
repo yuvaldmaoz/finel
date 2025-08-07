@@ -161,12 +161,12 @@ router.post("/", (req, res) => {
   });
 });
 
-// POST /orders/:orderId/close - סגירת הזמנה ועדכון מלאי בהתאם לפריטים שבה
+
+// POST /orders/:orderId/close - סגירת הזמנה ועדכון המלאי ועדכון תאריך תפוגה שבוע קדימה
 // דוגמת בקשת POST:
 // {
 //   "orderId": 1
 // }
-
 router.post("/:orderId/close", (req, res) => {
   const orderId = req.params.orderId;
 
@@ -190,12 +190,29 @@ router.post("/:orderId/close", (req, res) => {
           if (err)
             return res.status(500).json({ error: "Failed to get order items" });
 
-          // שלב 3: עדכון המלאי
-          const values = items.map((item) => [item.product_id, item.quantity]);
+          if (items.length === 0)
+            return res
+              .status(400)
+              .json({ error: "No items found for this order" });
+
+          // שלב 3: חישוב תאריך תפוגה שבוע קדימה
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 7);
+          const mysqlFormattedDate = expirationDate.toISOString().split("T")[0]; // YYYY-MM-DD
+
+          // בניית הערכים לעדכון
+          const values = items.map((item) => [
+            item.product_id,
+            item.quantity,
+            mysqlFormattedDate,
+          ]);
+
           const updateStockQuery = `
-            INSERT INTO products (id, Quantity)
+            INSERT INTO products (id, Quantity, Expiration_Date)
             VALUES ?
-            ON DUPLICATE KEY UPDATE Quantity = Quantity + VALUES(Quantity);
+            ON DUPLICATE KEY UPDATE 
+              Quantity = Quantity + VALUES(Quantity),
+              Expiration_Date = VALUES(Expiration_Date);
           `;
 
           db.query(updateStockQuery, [values], (err) => {
