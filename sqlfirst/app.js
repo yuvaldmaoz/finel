@@ -10,6 +10,9 @@ const ShiftRoutes = require("./routes/Shift");
 const suppliersRoutes = require("./routes/suppliers");
 const categoriesRoutes = require("./routes/categories");
 const clientRoutes = require("./routes/client");
+const returnRoutes = require("./routes/return");
+
+
 
 
 
@@ -33,6 +36,7 @@ app.use("/Shift", ShiftRoutes);
 app.use("/suppliers", suppliersRoutes);
 app.use("/categories", categoriesRoutes);
 app.use("/client", clientRoutes);
+app.use("/return", returnRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

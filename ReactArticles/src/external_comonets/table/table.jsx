@@ -33,10 +33,11 @@ export default function TableComponent({ data, role }) {
                   className={(() => {
                     const exp = new Date(product.Expiration_Date);
                     const now = new Date();
-                    const diff = (exp - now) / (1000 * 60 * 60 * 24); // difference in days
-                    return diff <= 5 ? styles.lowStock : undefined;
+                    // הוסף class רק אם תאריך התפוגה עבר
+                    return exp < now ? styles.lowStock : undefined;
                   })()}
                 >
+                  
                   {product.Expiration_Date}
                 </td>
               )}
