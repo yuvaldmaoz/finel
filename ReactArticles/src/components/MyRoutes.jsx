@@ -11,27 +11,30 @@ import OrderView from "./OrderView";
 import OrdersPage from "./OrdersPage";
 import Task from "./Task";
 import LoginPage from "./login";
-import EmployeePage from "./EmployeePage"; // הוסף ייבוא
-import Shifts from "./Shifts"; // הוסף ייבוא
-import AddShift from "./AddShift"; // הוסף ייבוא
-import ShiftsView from "./ShiftsView"; // הוסף ייבוא
-import RegisterPage from "./RegisterPage"; // הוסף ייבוא לקומפוננטת הרשמה (אם קיימת)
+import EmployeePage from "./EmployeePage";
+import Shifts from "./Shifts";
+import AddShift from "./AddShift";
+import ShiftsView from "./ShiftsView";
+import RegisterPage from "./RegisterPage";
+
+// ייבוא הקומפוננטות החדשות
+import ReturnPage from "./ReturnPage";
+import ReturnView from "./ReturnView";
+import Return from "./Return";
 
 function MyRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null); // "admin" or "employee"
   const [username, setUsername] = useState("");
-  const [userId, setUserId] = useState(null); // הוספת state חדש
+  const [userId, setUserId] = useState(null);
 
-  // דוגמה: קבלת תפקיד מה־login
   const handleLogin = (role, username, id) => {
     setIsAuthenticated(true);
     setUsername(username);
-    setUserRole(role); // role יכול להיות "admin" או "employee"
+    setUserRole(role);
     setUserId(id);
   };
 
-  //מתן ניתוב לדפים בהתאם לתפקיד המשתמש וביצוע בדיקות אימות
   return (
     <div className="App">
       <div className="sidebar">
@@ -43,6 +46,7 @@ function MyRoutes() {
         <Routes>
           <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage />} />
+
           <Route
             path="/Home"
             element={
@@ -64,7 +68,6 @@ function MyRoutes() {
               )
             }
           />
-
           <Route
             path="/Order"
             element={
@@ -144,6 +147,38 @@ function MyRoutes() {
             element={
               isAuthenticated && userRole === "admin" ? (
                 <ShiftsView />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+
+          {/* הניתובים החדשים למנהל */}
+          <Route
+            path="/returns"
+            element={
+              isAuthenticated && userRole === "admin" ? (
+                <ReturnPage />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/return/:id"
+            element={
+              isAuthenticated && userRole === "admin" ? (
+                <ReturnView />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/return"
+            element={
+              isAuthenticated && userRole === "admin" ? (
+                <Return />
               ) : (
                 <Navigate to="/" />
               )

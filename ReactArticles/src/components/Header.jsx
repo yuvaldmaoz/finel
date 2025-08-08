@@ -50,6 +50,28 @@ function Header({ userRole, username, id }) {
                       משימות ✅
                     </NavLink>
                   </li>
+
+                  {/* קישורים חדשים להחזרות */}
+                  <li>
+                    <NavLink
+                      to="/returns"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      החזרות ↩️
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/return"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      החזרה חדשה ➕
+                    </NavLink>
+                  </li>
                 </>
               )}
 
