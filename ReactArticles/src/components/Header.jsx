@@ -62,16 +62,7 @@ function Header({ userRole, username, id }) {
                       החזרות ↩️
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink
-                      to="/return"
-                      className={({ isActive }) =>
-                        isActive ? classes.menuItemActive : classes.menuItem
-                      }
-                    >
-                      החזרה חדשה ➕
-                    </NavLink>
-                  </li>
+
                 </>
               )}
 
