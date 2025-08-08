@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import classes from "./recoed.module.css";
 
 /**
- * description: Record component displaying order details
+ * description: Record component displaying order or return details
  * @returns JSX of component
  */
 export default function Record(props) {
@@ -14,13 +14,20 @@ export default function Record(props) {
           {props.supplier} | {props.status}
         </div>
         <div className={classes.details}>
-          מספר הזמנה: {props.id} | תאריך: {props.date}
+          מספר {props.type === "Orders" ? "הזמנה" : "החזרה"}: {props.id} |
+          תאריך: {props.date}
         </div>
       </div>
-      {/* 🔄 כפתור חדש לצפייה בפרטי ההזמנה */}
-      <Link to={`/return/${props.id}`} className={classes.button}>
-        צפייה
-      </Link>
+
+      {props.type === "Orders" ? (
+        <Link to={`/Order/${props.id}`} className={classes.button}>
+          צפייה
+        </Link>
+      ) : props.type === "Returns" ? (
+        <Link to={`/return/${props.id}`} className={classes.button}>
+          צפייה
+        </Link>
+      ) : null}
     </div>
   );
 }

@@ -7,10 +7,11 @@ import classes from "./window.module.css";
  */
 export default function Window(props) {
   const list = props.record;
+  const type = props.type;
 
   return (
     <div className={classes.container}>
-      <Recordlist record_list={list} />
+      <Recordlist record_list={list} type={type} />
     </div>
   );
 }

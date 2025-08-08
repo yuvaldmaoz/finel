@@ -108,7 +108,7 @@ function ReturnPage({ id }) {
           />
         </div>
       </div>
-      <Window record={orders} />
+      <Window record={orders} type={"Returns"} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import classes from "./Recordlist.module.css";
 
 export default function Recordlist(props) {
   const list = props.record_list;
+  const type = props.type;
 
   return (
     <div className={classes.recordsContainer}>
@@ -13,6 +14,7 @@ export default function Recordlist(props) {
           date={item.created_at}
           supplier={item.supplier_name}
           status={item.status}
+          type={type}
         />
       ))}
     </div>
