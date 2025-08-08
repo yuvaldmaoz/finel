@@ -17,8 +17,8 @@ export default function Record(props) {
           מספר הזמנה: {props.id} | תאריך: {props.date}
         </div>
       </div>
-        {/* 🔄 כפתור חדש לצפייה בפרטי ההזמנה */}
-      <Link to={`/order/${props.id}`} className={classes.button}>
+      {/* 🔄 כפתור חדש לצפייה בפרטי ההזמנה */}
+      <Link to={`/return/${props.id}`} className={classes.button}>
         צפייה
       </Link>
     </div>

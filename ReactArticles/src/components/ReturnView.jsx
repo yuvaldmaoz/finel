@@ -5,32 +5,23 @@ import ExportReport from "../external_comonets/ExportReport/ExportReport";
 import TableComponent from "../external_comonets/table/table";
 import classes from "../external_comonets/window/window.module.css";
 
-function ReturnView({ userRole }) {
+function ReturnView() {
   const { id } = useParams();
-  const [orderDetails, setOrderDetails] = useState([]);
+  const [returnDetails, setReturnDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = () => {
+  const fetchReturnData = () => {
     setLoading(true);
-    const endpoint =
-      userRole === "client" ? `/client/${id}` : `/orders/details/${id}`;
-
     axios
-      // 🔄 אם התפקיד הוא לקוח, נשלח בקשה לשרת עם מזהה הלקו
-      // דוגמא בקשת GET:
-      // /client/123
-      // אם התפקיד הוא מנהל, נשלח בקשה לשרת עם מזהה ההזמנה
-      // דוגמא בקשת GET:
-      // /orders/details/123
-      .get(endpoint)
+      .get(`/return/details/${id}`)
       .then((res) => {
-        setOrderDetails(res.data);
+        setReturnDetails(res.data);
         setError(null);
       })
       .catch((error) => {
-        console.error("Error fetching order details:", error);
-        setError("שגיאה בטעינת פרטי ההזמנה");
+        console.error("Error fetching return details:", error);
+        setError("שגיאה בטעינת פרטי ההחזרה");
       })
       .finally(() => {
         setLoading(false);
@@ -38,28 +29,27 @@ function ReturnView({ userRole }) {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [id, userRole]);
+    fetchReturnData();
+  }, [id]);
 
-  const handleCloseOrder = () => {
+  const handleCloseReturn = () => {
     axios
-      // 🔄 אם התפקיד הוא מנהל, נשלח בקשה לשרת לסגירת ההזמנה
-      .post(`/orders/${id}/close`)
+      .post(`/return/${id}/close`)
       .then(() => {
-        fetchData(); // רענון הנתונים לאחר סגירה
+        fetchReturnData();
       })
       .catch((error) => {
-        console.error("Error closing order:", error);
+        console.error("Error closing return:", error);
       });
   };
 
   if (loading) return <div>טוען...</div>;
   if (error) return <div>{error}</div>;
 
-  const totalPrice = orderDetails
-    .reduce((total, order) => {
-      const price = parseFloat(order.Price);
-      const quantity = parseInt(order.Quantity, 10);
+  const totalRefund = returnDetails
+    .reduce((total, item) => {
+      const price = parseFloat(item.Price);
+      const quantity = parseInt(item.Quantity, 10);
       return total + price * quantity;
     }, 0)
     .toFixed(2);
@@ -68,9 +58,7 @@ function ReturnView({ userRole }) {
     <div className="main">
       <section className="post">
         <div className="container">
-          <h1 className="post-title">
-            {userRole === "client" ? "פרטי הזמנה מספר" : "הזמנה מספק מספר"} {id}
-          </h1>
+          <h1 className="post-title">החזרה מספר {id}</h1>
 
           <div className="single-post">
             <div
@@ -81,26 +69,23 @@ function ReturnView({ userRole }) {
                 marginBottom: "20px",
               }}
             >
-              <p style={{ margin: 0 }}>סה"כ לתשלום: ₪{totalPrice}</p>
-              {/* 🔄 כפתור ייצוא דוח */}
-              {userRole === "admin" && <ExportReport list={orderDetails} />}
+              <p style={{ margin: 0 }}>סה"כ זיכוי: ₪{totalRefund}</p>
+              <ExportReport list={returnDetails} />
             </div>
 
-            {userRole === "admin" && (
-              <button
-                style={{
-                  margin: 0,
-                  marginLeft: "auto", // Pushes button to the left
-                  display: "block", // Ensures block-level display
-                }}
-                className={classes.button}
-                onClick={handleCloseOrder}
-              >
-                סגור הזמנה
-              </button>
-            )}
+            <button
+              style={{
+                margin: 0,
+                marginLeft: "auto",
+                display: "block",
+              }}
+              className={classes.button}
+              onClick={handleCloseReturn}
+            >
+              סגור החזרה
+            </button>
 
-            <TableComponent data={orderDetails} role={userRole} />
+            <TableComponent data={returnDetails} />
           </div>
         </div>
       </section>
