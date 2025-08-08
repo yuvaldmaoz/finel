@@ -168,7 +168,7 @@ function MyRoutes() {
             path="/return/:id"
             element={
               isAuthenticated && userRole === "admin" ? (
-                <ReturnView />
+                <ReturnView userRole={userRole} />
               ) : (
                 <Navigate to="/" />
               )

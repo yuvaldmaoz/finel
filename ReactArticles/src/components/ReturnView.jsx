@@ -5,7 +5,7 @@ import ExportReport from "../external_comonets/ExportReport/ExportReport";
 import TableComponent from "../external_comonets/table/table";
 import classes from "../external_comonets/window/window.module.css";
 
-function ReturnView() {
+function ReturnView({ userRole }) {
   const { id } = useParams();
   const [returnDetails, setReturnDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,7 @@ function ReturnView() {
               סגור החזרה
             </button>
 
-            <TableComponent data={returnDetails} />
+            <TableComponent data={returnDetails} role={userRole} />
           </div>
         </div>
       </section>
