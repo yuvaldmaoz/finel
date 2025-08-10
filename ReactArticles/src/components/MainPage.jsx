@@ -9,6 +9,7 @@ import TableComponent from "../external_comonets/table/table";
 import TaskComponent from "../external_comonets/task/task";
 import ShiftsTable from "../external_comonets/shiftsTable/ShiftsTable";
 import classes from "../external_comonets/window/window.module.css";
+import { Link } from "react-router-dom";
 
 function MainPage({ username }) {
   const [tasks, setTasks] = useState([]);
@@ -19,7 +20,7 @@ function MainPage({ username }) {
 
   const fetchtasksData = () => {
     axios
-    
+
       .get(`dashboard_employee?name=${username}`)
       .then((res) => {
         setTasks(res.data);
@@ -179,7 +180,18 @@ function MainPage({ username }) {
             <option value="Expiration_Date">תוקף קרוב</option>
           </select>
         </div>
+
         <TableComponent data={criticalList} />
+        {criticalFilter === "Expiration_Date" ? (
+          <Link to="/return" className={classes.button}>
+            + הוסף החזרה
+          </Link>
+        ) : null}
+        {criticalFilter === "Quantity" || criticalFilter === "all" ? (
+          <Link to="/Order" className={classes.button}>
+            + הוסף הזמנה
+          </Link>
+        ) : null}
       </div>
       <div
         className="simple-bar-chart-container"
