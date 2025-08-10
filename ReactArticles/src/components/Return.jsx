@@ -97,13 +97,21 @@ export default function Return() {
         <h1 className={classes.title}>הוסף החזרה</h1>
       </div>
 
-      <TableComponent data={productList} />
+      {productList.length === 0 && (
+        <div className={classes.emptyMessage}>אין מוצרים להחזרה</div>
+      )}
 
-      <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
-        <button onClick={submitReturn} className="btn">
-          בצע החזרה לספקים
-        </button>
-      </div>
+      {productList.length > 0 && (
+        <>
+          <TableComponent data={productList} />
+
+          <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
+            <button onClick={submitReturn} className={classes.button}>
+              בצע החזרה לספקים
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

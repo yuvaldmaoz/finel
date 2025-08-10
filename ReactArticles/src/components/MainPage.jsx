@@ -180,18 +180,26 @@ function MainPage({ username }) {
             <option value="Expiration_Date">תוקף קרוב</option>
           </select>
         </div>
+        {criticalList.length === 0 ? (
+          <div className={classes.emptyMessage}>אין מוצרים קריטיים</div>
+        ) : (
+          <>
+            <TableComponent data={criticalList} />
 
-        <TableComponent data={criticalList} />
-        {criticalFilter === "Expiration_Date" ? (
-          <Link to="/return" className={classes.button}>
-            + הוסף החזרה
-          </Link>
-        ) : null}
-        {criticalFilter === "Quantity" || criticalFilter === "all" ? (
-          <Link to="/Order" className={classes.button}>
-            + הוסף הזמנה
-          </Link>
-        ) : null}
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+              {criticalFilter === "Expiration_Date" && (
+                <Link to="/return" className={classes.button}>
+                  + הוסף החזרה
+                </Link>
+              )}
+              {(criticalFilter === "Quantity" || criticalFilter === "all") && (
+                <Link to="/Order" className={classes.button}>
+                  + הוסף הזמנה
+                </Link>
+              )}
+            </div>
+          </>
+        )}
       </div>
       <div
         className="simple-bar-chart-container"

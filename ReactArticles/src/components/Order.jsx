@@ -203,24 +203,32 @@ export default function Order({ userRole, id }) {
           )}
         </div>
       </div>
+      {orderList.length === 0 && (
+        <div className={classes.emptyMessage}>
+          אין מוצרים בהזמנה. אנא הוסף מוצרים להזמנה
+        </div>
+      )}
+      {orderList.length > 0 && (
+        <>
+          <TableComponent data={orderList} />
 
-      <TableComponent data={orderList} />
-
-      <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
-        <button onClick={submitOrder} className="btn">
-          {userRole === "client" ? "שלח הזמנה" : "בצע הזמנה מספקים"}
-        </button>
-        {userRole === "admin" && (
-          <>
-            <button onClick={filterorder} className="btn">
-              צריך להזמין
+          <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
+            <button onClick={submitOrder} className={classes.button}>
+              {userRole === "client" ? "שלח הזמנה" : "בצע הזמנה מספקים"}
             </button>
-            <button onClick={filterbaek} className="btn">
-              הצג הכול
-            </button>
-          </>
-        )}
-      </div>
+            {userRole === "admin" && (
+              <>
+                <button onClick={filterorder} className={classes.button}>
+                  צריך להזמין
+                </button>
+                <button onClick={filterbaek} className={classes.button}>
+                  הצג הכול
+                </button>
+              </>
+            )}
+          </div>
+        </>
+      )}
 
       <div className="products-grid">
         {productList.map((product) => (

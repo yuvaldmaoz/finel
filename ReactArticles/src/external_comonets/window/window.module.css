@@ -86,3 +86,9 @@
 .addButton:hover {
   background-color: #0f8b57;
 }
+.emptyMessage {
+  text-align: center;
+  font-size: 3rem;
+  color: #666;
+  margin-top: 20px;
+}
