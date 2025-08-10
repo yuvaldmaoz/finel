@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
     FROM products p
     JOIN suppliers s ON p.supplier_id = s.id
     JOIN categories c ON p.category_id = c.id
-    WHERE DATEDIFF(p.Expiration_Date, CURDATE()) <= 5;
+    WHERE DATEDIFF(p.Expiration_Date, CURDATE()) <= 2;
   `;
 
   db.query(query, (err, results) => {

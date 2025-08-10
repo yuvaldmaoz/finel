@@ -131,11 +131,11 @@ router.get("/critical", (req, res) => {
   if (filter === "Quantity") {
     whereClause = "p.Quantity < 5";
   } else if (filter === "Expiration_Date") {
-    whereClause = "DATEDIFF(p.Expiration_Date, CURDATE()) <= 5";
+    whereClause = "DATEDIFF(p.Expiration_Date, CURDATE()) <= 2";
   } else {
     // ברירת מחדל: מציג את כל הקריטיים (שני התנאים)
     whereClause =
-      "p.Quantity < 5 OR DATEDIFF(p.Expiration_Date, CURDATE()) <= 5";
+      "p.Quantity < 5 OR DATEDIFF(p.Expiration_Date, CURDATE()) <= 2";
   }
 
   const query = `
