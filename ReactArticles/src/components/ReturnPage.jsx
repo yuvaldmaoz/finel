@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import classes from "../external_comonets/window/window.module.css";
 
-function ReturnPage({ id }) {
+function ReturnPage({userRole, id }) {
   const [orders, setOrders] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState("all");
   const [suppliers, setSuppliers] = useState([]);
@@ -108,7 +108,7 @@ function ReturnPage({ id }) {
           />
         </div>
       </div>
-      <Window record={orders} type={"Returns"} />
+      <Window record={orders} type={"Returns"} role={userRole} />
     </div>
   );
 }

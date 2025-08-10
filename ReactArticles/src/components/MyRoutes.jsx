@@ -158,7 +158,7 @@ function MyRoutes() {
             path="/returns"
             element={
               isAuthenticated && userRole === "admin" ? (
-                <ReturnPage />
+                <ReturnPage userRole={userRole} />
               ) : (
                 <Navigate to="/" />
               )

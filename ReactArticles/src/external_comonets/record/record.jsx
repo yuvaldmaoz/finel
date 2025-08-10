@@ -11,7 +11,11 @@ export default function Record(props) {
     <div className={classes.container}>
       <div>
         <div className={classes.supplier}>
-          {props.supplier} | {props.status}
+          {props.role === "admin" && (
+            <div className={classes.supplier}>
+              {props.supplier} | {props.status}
+            </div>
+          )}{" "}
         </div>
         <div className={classes.details}>
           מספר {props.type === "Orders" ? "הזמנה" : "החזרה"}: {props.id} |

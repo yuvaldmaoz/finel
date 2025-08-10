@@ -12,7 +12,7 @@ export default function TableComponent({ data, role }) {
             <th>קטגוריה</th>
             <th>שם מוצר</th>
             <th>כמות</th>
-            {role !== "admin" && <th>תאריך תפוגה</th>}
+            {role !== "admin" && role !== "client" && <th>תאריך תפוגה</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@ export default function TableComponent({ data, role }) {
               >
                 {product.Quantity}
               </td>
-              {role !== "admin" && (
+              {role !== "admin" && role !== "client" && (
                 <td
                   className={(() => {
                     const exp = new Date(product.Expiration_Date);
@@ -37,7 +37,6 @@ export default function TableComponent({ data, role }) {
                     return exp < now ? styles.lowStock : undefined;
                   })()}
                 >
-                  
                   {product.Expiration_Date}
                 </td>
               )}

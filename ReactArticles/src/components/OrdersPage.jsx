@@ -152,7 +152,7 @@ function OrdersPage({ userRole, id }) {
           />
         </div>
       </div>
-      <Window record={orders} type={"Orders"} />
+      <Window record={orders} type={"Orders"} role={userRole} />
     </div>
   );
 }

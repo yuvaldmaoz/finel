@@ -210,7 +210,7 @@ export default function Order({ userRole, id }) {
       )}
       {orderList.length > 0 && (
         <>
-          <TableComponent data={orderList} />
+          <TableComponent data={orderList} role={userRole} />
 
           <div style={{ display: "flex", gap: "10px", margin: "20px 0" }}>
             <button onClick={submitOrder} className={classes.button}>
