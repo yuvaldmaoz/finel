@@ -211,7 +211,11 @@ function MainPage({ username }) {
       >
         <h2 className="simple-bar-chart-title">משימות שלי</h2>
         <div className="task-scroll-area">
-          <TaskComponent tasks={tasks} onToggleStatus={toggleTaskStatus} />
+          {tasks.length === 0 ? (
+            <div className={classes.emptyMessage}>אין משימות</div>
+          ) : (
+            <TaskComponent tasks={tasks} onToggleStatus={toggleTaskStatus} />
+          )}
         </div>
       </div>
 
@@ -235,7 +239,11 @@ function MainPage({ username }) {
         style={{ width: "98%", margin: "20px auto 0 auto" }}
       >
         <h2 className="simple-bar-chart-title">שיבוצים שלי</h2>
-        <ShiftsTable data={Shifts} />
+        {Shifts.length === 0 ? (
+          <div className={classes.emptyMessage}>אין שיבוצים</div>
+        ) : (
+          <ShiftsTable data={Shifts} />
+        )}
       </div>
     </div>
   );
