@@ -114,8 +114,8 @@ function MainPage({ username }) {
   }, []);
 
   const [taskDateRange, setTaskDateRange] = useState({
-    from: new Date().getFullYear() + "-01-01", // Format: YYYY-MM-DD
-    to: new Date().getFullYear() + "-12-31", // Format: YYYY-MM-DD
+    from: new Date().getFullYear() + "-01", // Default to current year, January
+    to: new Date().getFullYear() + "-12", // Default to current year, December
   });
 
   const fetchTaskData = () => {
