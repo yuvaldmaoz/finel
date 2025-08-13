@@ -41,7 +41,13 @@ export default function TableComponent({ data, role }) {
                     exp.setHours(0, 0, 0, 0);
                     now.setHours(0, 0, 0, 0);
 
-                    return exp < now ? styles.lowStock : undefined;
+                    // חישוב כמה ימים נשארו
+                    const diffDays = (exp - now) / (1000 * 60 * 60 * 24);
+
+                    // class אם התאריך עבר או נשארו פחות מ-2 ימים
+                    return diffDays < 0 || diffDays <= 2
+                      ? styles.lowStock
+                      : undefined;
                   })()}
                 >
                   {product.Expiration_Date}
