@@ -68,6 +68,7 @@ export default function AddTaskPopup({ onAdd, onClose, employeeList }) {
               value={taskData.date}
               onChange={handleChange}
               required
+              min={new Date().toISOString().split("T")[0]} // לא מאפשר תאריך עבר
             />
           </div>
 

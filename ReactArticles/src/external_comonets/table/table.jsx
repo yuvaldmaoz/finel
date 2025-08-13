@@ -31,9 +31,16 @@ export default function TableComponent({ data, role }) {
               {role !== "admin" && role !== "client" && (
                 <td
                   className={(() => {
-                    const exp = new Date(product.Expiration_Date);
+                    if (!product.Expiration_Date) return undefined; // אם אין תאריך - לא מוסיפים class
+
+                    const [day, month, year] =
+                      product.Expiration_Date.split("/");
+                    const exp = new Date(`${year}-${month}-${day}`);
+
                     const now = new Date();
-                    // הוסף class רק אם תאריך התפוגה עבר
+                    exp.setHours(0, 0, 0, 0);
+                    now.setHours(0, 0, 0, 0);
+
                     return exp < now ? styles.lowStock : undefined;
                   })()}
                 >
