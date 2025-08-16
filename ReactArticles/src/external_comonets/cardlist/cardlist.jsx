@@ -2,6 +2,7 @@ import Card from "../card/Caed";
 import classes from "./cardlist.module.css";
 
 export default function Cardlist(props) {
+  //
   const cardList = props.list;
 
   return (

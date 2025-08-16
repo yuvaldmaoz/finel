@@ -2,6 +2,7 @@ import "./Card.css";
 import { Link } from "react-router-dom";
 
 export default function Card({ user, index }) {
+
   const images = [
     "https://cdn-icons-png.flaticon.com/512/4388/4388193.png",
     "https://icon-library.com/images/task-icon/task-icon-0.jpg",
