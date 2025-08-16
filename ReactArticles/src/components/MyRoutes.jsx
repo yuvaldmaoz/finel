@@ -21,6 +21,7 @@ import RegisterPage from "./RegisterPage";
 import ReturnPage from "./ReturnPage";
 import ReturnView from "./ReturnView";
 import Return from "./Return";
+import UserPage from "./userpage"; // ייבוא הקומפוננטה החדשה
 
 function MyRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -179,6 +180,17 @@ function MyRoutes() {
             element={
               isAuthenticated && userRole === "admin" ? (
                 <Return />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/userpage"
+            element={
+              isAuthenticated &&
+              (userRole === "admin" ) ? (
+                <UserPage userRole={userRole} id={userId} />
               ) : (
                 <Navigate to="/" />
               )

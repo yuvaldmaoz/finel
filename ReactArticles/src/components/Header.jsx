@@ -63,6 +63,16 @@ function Header({ userRole, username, id }) {
                     </NavLink>
                   </li>
 
+                  <li>
+                    <NavLink
+                      to="/userpage"
+                      className={({ isActive }) =>
+                        isActive ? classes.menuItemActive : classes.menuItem
+                      }
+                    >
+                      משתמשים 👥
+                    </NavLink>
+                  </li>
                 </>
               )}
 
