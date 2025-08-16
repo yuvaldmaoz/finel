@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import classes from "../external_comonets/Login/Login.module.css";
 
-function RegisterPage() {
+function RegisterPage({ userRole }) {
   const [form, setForm] = useState({
     name: "",
-    role: "employe",
+    role: userRole === "admin" ? "employe" : "client", // default role לפי userRole
     password: "",
     email: "",
   });
@@ -39,7 +39,9 @@ function RegisterPage() {
   return (
     <div className={classes.loginContainer}>
       <div className={classes.innerContainer}>
-        <h1 className={classes.title}>הרשמה למערכת</h1>
+        <h1 className={classes.title}>
+          {userRole === "admin" ? "הוספת עובד חדש" : "הרשמה למערכת"}
+        </h1>
         <form onSubmit={handleSubmit} className={classes.loginForm}>
           <div className={classes.formGroup}>
             <label htmlFor="name">שם משתמש:</label>

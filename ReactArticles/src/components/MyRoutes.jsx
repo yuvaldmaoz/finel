@@ -46,7 +46,10 @@ function MyRoutes() {
       <div className="main-content">
         <Routes>
           <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/register"
+            element={<RegisterPage userRole={userRole} />}
+          />
 
           <Route
             path="/Home"
@@ -188,8 +191,7 @@ function MyRoutes() {
           <Route
             path="/userpage"
             element={
-              isAuthenticated &&
-              (userRole === "admin" ) ? (
+              isAuthenticated && userRole === "admin" ? (
                 <UserPage userRole={userRole} id={userId} />
               ) : (
                 <Navigate to="/" />
