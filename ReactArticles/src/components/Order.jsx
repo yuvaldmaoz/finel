@@ -232,7 +232,12 @@ export default function Order({ userRole, id }) {
 
       <div className="products-grid">
         {productList.map((product) => (
-          <Product key={product.id} user={product} setList={setOrderList} />
+          <Product
+            key={product.id}
+            user={product}
+            setList={setOrderList}
+            userRole ={userRole}
+          />
         ))}
       </div>
     </div>
