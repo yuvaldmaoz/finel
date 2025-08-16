@@ -6,11 +6,35 @@ const router = express.Router();
 // Execute a query to the database
 const db = dbSingleton.getConnection();
 
+// Get all users
+//דוגמא לשאילתא: GET /users
 router.get("/", (req, res) => {
-  const query = "SELECT * FROM users";
-  db.query(query, (err, results) => {
+  const role = req.query.role || "";
+  const name = req.query.name || "";
+
+  let query = "SELECT * FROM users";
+  const values = [];
+
+  const conditions = [];
+
+  if (role && role !== "all") {
+    conditions.push("role = ?");
+    values.push(role);
+  }
+
+  if (name) {
+    conditions.push("name LIKE ?");
+    values.push(`%${name}%`);
+  }
+
+  if (conditions.length > 0) {
+    query += " WHERE " + conditions.join(" AND ");
+  }
+
+  db.query(query, values, (err, results) => {
     if (err) {
-      res.status(500).send(err);
+      console.error(err);
+      res.status(500).send("Database error");
       return;
     }
     res.json(results);
@@ -27,8 +51,6 @@ router.get("/name", (req, res) => {
     res.json(results);
   });
 });
-
-
 
 const bcrypt = require("bcrypt");
 
