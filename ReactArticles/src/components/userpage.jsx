@@ -6,26 +6,6 @@ import styles from "../external_comonets/task/task.module.css"; // ודא שהנ
 
 export default function UserPage() {
   const [users, setusers] = useState([]);
-  const user = [
-    {
-      id: 1,
-      name: "דני כהן",
-      email: "dani@example.com",
-      role: "מנהל",
-    },
-    {
-      id: 2,
-      name: "שרה לוי",
-      email: "sara@example.com",
-      role: "משתמש",
-    },
-    {
-      id: 3,
-      name: "יוסי ישראלי",
-      email: "yossi@example.com",
-      role: "עורך",
-    },
-  ];
 
 
   useEffect(() => {

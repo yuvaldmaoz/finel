@@ -10,7 +10,7 @@ export default function Card({ user, index }) {
     "https://static.vecteezy.com/system/resources/previews/020/911/740/original/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
   ];
 
-  const routing = ["/orders", "/tasks", "/orders", "/orders"];
+  const routing = ["/orders", "/tasks", "/userpage", "/userpage"];
 
   const { tables, total_objects } = user;
 
