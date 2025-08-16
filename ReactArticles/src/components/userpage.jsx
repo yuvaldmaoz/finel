@@ -1,62 +1,50 @@
 import React, { useState, useEffect } from "react";
-import TaskComponent from "../external_comonets/task/task";
-import AddTaskPopup from "./AddTaskPopup";
+import { Link } from "react-router-dom";
+import UsersComponent from "../external_comonets/task/UsersComponent";
 import axios from "axios";
 import styles from "../external_comonets/task/task.module.css"; // ודא שהנתיב נכון
 
 export default function UserPage() {
-  const [tasks, setTasks] = useState([]);
-  const [showAddPopup, setShowAddPopup] = useState(false);
-  const [nameList, setNameList] = useState([]);
+  const [users, setusers] = useState([]);
+  const user = [
+    {
+      id: 1,
+      name: "דני כהן",
+      email: "dani@example.com",
+      role: "מנהל",
+    },
+    {
+      id: 2,
+      name: "שרה לוי",
+      email: "sara@example.com",
+      role: "משתמש",
+    },
+    {
+      id: 3,
+      name: "יוסי ישראלי",
+      email: "yossi@example.com",
+      role: "עורך",
+    },
+  ];
+
 
   useEffect(() => {
     fetchData();
-    fetchNameList();
   }, []);
 
   const fetchData = () => {
     axios
-      .get("task")
+      .get("users")
       .then((res) => {
-        setTasks(res.data);
+        setusers(res.data); // תיקון כאן
       })
       .catch((error) => {
         console.error("Error fetching tasks:", error);
       });
   };
 
-  const fetchNameList = () => {
-    axios
-      .get("users/name")
-      .then((res) => {
-        setNameList(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  };
 
-  const addNewTask = (taskData) => {
-    axios
-      .post("task", taskData)
-      .then(() => {
-        fetchData();
-      })
-      .catch((error) => {
-        console.error("Error adding task:", error);
-      });
-  };
 
-  const toggleTaskStatus = (taskId) => {
-    axios
-      .post(`task/${taskId}`)
-      .then(() => {
-        fetchData();
-      })
-      .catch((error) => {
-        console.error("Error updating task status:", error);
-      });
-  };
 
   return (
     <div className={styles["tasker-container"]}>
@@ -64,23 +52,14 @@ export default function UserPage() {
         className={`${styles["tasker-header"]} ${styles["tasker-header-reverse"]}`}
       >
         <h1>משתמשים</h1>
-        <button
-          className={styles["new-task-btn"]}
-          onClick={() => setShowAddPopup(true)}
-        >
-          + הוסף משימה
-        </button>
+        <Link to="/register" className={styles["new-task-btn"]}>
+          + הוסף עובד
+        </Link>
       </div>
       <div className="container">
-        <TaskComponent tasks={tasks} onToggleStatus={toggleTaskStatus} />
-        {showAddPopup && (
-          <AddTaskPopup
-            onAdd={addNewTask}
-            onClose={() => setShowAddPopup(false)}
-            employeeList={nameList}
-          />
-        )}
+        <UsersComponent users={users} />
       </div>
     </div>
   );
 }
+
