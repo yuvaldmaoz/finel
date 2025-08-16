@@ -30,16 +30,16 @@ function MainPage({ username }) {
       });
   };
 
-  const toggleTaskStatus = (taskId) => {
-    axios
-      .post(`task/${taskId}`)
-      .then(() => {
-        fetchData();
-      })
-      .catch((error) => {
-        console.error("Error updating task status:", error);
-      });
-  };
+const toggleTaskStatus = (taskId) => {
+  axios
+    .post(`task/${taskId}`)
+    .then(() => {
+      fetchtasksData(); // עכשיו זה יעדכן את רשימת המשימות הנכונה
+    })
+    .catch((error) => {
+      console.error("Error updating task status:", error);
+    });
+};
 
   const [criticalList, setcriticalList] = useState([]);
   const [criticalFilter, setCriticalFilter] = useState("all"); // אפשרויות: all, Quantity, Expiration_Date
