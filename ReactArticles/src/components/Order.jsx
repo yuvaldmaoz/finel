@@ -24,7 +24,7 @@ export default function Order({ userRole, id }) {
 
   const fetchData = () => {
     axios
-    //רשימת המוצרים לאחר סינון לפי חיפוש, קטגוריה וספק
+      //רשימת המוצרים לאחר סינון לפי חיפוש, קטגוריה וספק
       .get(
         `products/search?name=${searchTerm}&category=${selectedCategory}&supplier=${selectedSupplier}`
       )
@@ -42,18 +42,8 @@ export default function Order({ userRole, id }) {
 
   const fetchCategories = () => {
     axios
-      //רשימת הקטגוריות 
       .get("categories")
-      .then((res) => {
-        const formattedCategories = res.data.map((cat) => ({
-          value: cat.name,
-          label: cat.name,
-        }));
-        setCategories([
-          { value: "", label: "בחר קטגוריה" },
-          ...formattedCategories,
-        ]);
-      })
+      .then((res) => setCategories(res.data))
       .catch((error) => console.error("Error fetching categories:", error));
   };
 
@@ -181,12 +171,14 @@ export default function Order({ userRole, id }) {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className={classes.filterInput}
           >
-            {categories.map((category) => (
-              <option key={category.value} value={category.value}>
-                {category.label}
+            <option value="">בחר קטגוריה</option>
+            {categories.map((cat) => (
+              <option key={cat.name} value={cat.name}>
+                {cat.name}
               </option>
             ))}
           </select>
+
           {userRole === "admin" && (
             <select
               value={selectedSupplier}
@@ -236,7 +228,7 @@ export default function Order({ userRole, id }) {
             key={product.id}
             user={product}
             setList={setOrderList}
-            userRole ={userRole}
+            userRole={userRole}
           />
         ))}
       </div>
