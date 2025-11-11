@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import classes from "../external_comonets/Login/Login.module.css";
 
+// רכיב לדף הרשמה למערכת
+// מקבל את תפקיד המשתמש כפרופס כדי לקבוע אם מדובר בהרשמה כעובד או כלקוח
 function RegisterPage({ userRole }) {
   const [form, setForm] = useState({
     name: "",
