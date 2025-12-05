@@ -22,6 +22,7 @@ import ReturnPage from "./ReturnPage";
 import ReturnView from "./ReturnView";
 import Return from "./Return";
 import UserPage from "./userpage"; // ייבוא הקומפוננטה החדשה
+//מייצג את ניתובי האפליקציה בהתאם לתפקיד המשתמש
 
 function MyRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
